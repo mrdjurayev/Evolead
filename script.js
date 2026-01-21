@@ -1,55 +1,65 @@
-const PAGE = window.PAGE;
+const STORAGE_KEY = "homework_checklist_final";
 
-// Har bir "kun/versiya" uchun alohida storage key
-const STORAGE_KEY = `evolead-checks:${PAGE.version}`;
+const checklist = document.getElementById("checklist");
+const checkBtn = document.getElementById("checkBtn");
+const resetBtn = document.getElementById("resetBtn");
+const statusMsg = document.getElementById("statusMsg");
+const modal = document.getElementById("modal");
+const okBtn = document.getElementById("okBtn");
 
-// oldingi saqlangan holatni o'qish
-function loadState() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  } catch {
-    return {};
-  }
+function getBoxes(){
+  return [...checklist.querySelectorAll('input[type="checkbox"]')];
 }
 
-// holatni saqlash
-function saveState(state) {
+function loadState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return;
+  const state = JSON.parse(raw);
+  getBoxes().forEach(cb => cb.checked = !!state[cb.id]);
+}
+
+function saveState(){
+  const state = {};
+  getBoxes().forEach(cb => state[cb.id] = cb.checked);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-const state = loadState();
+checklist.addEventListener("change", saveState);
 
-document.getElementById("title").textContent = PAGE.title;
-document.getElementById("intro").textContent = PAGE.intro;
+checkBtn.addEventListener("click", () => {
+  const boxes = getBoxes();
+  const unchecked = boxes.filter(cb => !cb.checked).length;
 
-const list = document.getElementById("list");
-
-PAGE.items.forEach((item) => {
-  const row = document.createElement("label");
-  row.style.display = "flex";
-  row.style.alignItems = "center";
-  row.style.gap = "10px";
-  row.style.margin = "10px 0";
-
-  const cb = document.createElement("input");
-  cb.type = "checkbox";
-  cb.checked = !!state[item.id];
-
-  const text = document.createElement("span");
-  text.textContent = item.text;
-
-  cb.addEventListener("change", () => {
-    state[item.id] = cb.checked;
-    saveState(state);
-  });
-
-  row.appendChild(cb);
-  row.appendChild(text);
-  list.appendChild(row);
+  if (unchecked === 0) {
+    statusMsg.textContent = "";
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  } 
+  else if (unchecked === 1) {
+    statusMsg.textContent = "There is 1 task left";
+  } 
+  else {
+    statusMsg.textContent = `There are ${unchecked} tasks left`;
+  }
 });
 
-// Reset tugmasi
-document.getElementById("resetBtn").addEventListener("click", () => {
+resetBtn.addEventListener("click", () => {
+  const boxes = getBoxes();
+  boxes.forEach(cb => cb.checked = false);
+
   localStorage.removeItem(STORAGE_KEY);
-  location.reload();
+  statusMsg.textContent = "";
+
+  // agar modal ochiq bo'lsa ham yopib qo'yamiz
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
 });
+
+function closeModal(){
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+okBtn.addEventListener("click", closeModal);
+
+loadState();
