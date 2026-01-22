@@ -169,6 +169,7 @@ input[type="checkbox"]:checked + label{
   background: rgba(0,0,0,.26);
 }
 
+/* Footer */
 .footer{
   display:flex;
   flex-direction:column;
@@ -176,6 +177,7 @@ input[type="checkbox"]:checked + label{
   gap:10px;
   padding:20px;
   border-top:1px solid var(--line);
+  position: relative; /* help-btn endi footer ga bog'lanadi */
 }
 
 .status{
@@ -212,6 +214,44 @@ button:active{ transform: translateY(0px) scale(.99); }
   background: rgba(255,255,255,.12);
 }
 
+/* Help (?) button — o'rtacha kichikroq aylana */
+.help-btn{
+  position:absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 999px;
+
+  display:grid;
+  place-items:center;
+
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+
+  cursor:pointer;
+  box-shadow: 0 10px 26px rgba(0,0,0,.22);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  z-index: 5;
+}
+
+.help-btn:hover{
+  transform: translateY(-50%) translateY(-1px);
+  background: rgba(255,255,255,.10);
+  border-color: rgba(56,189,248,.28);
+}
+
+.help-btn:active{
+  transform: translateY(-50%) scale(.99);
+}
+
 /* Sahifaning eng pastidagi credit — juda kam joy */
 .page-credit{
   flex: 0 0 auto;
@@ -244,4 +284,47 @@ button:active{ transform: translateY(0px) scale(.99); }
   border:1px solid rgba(255,255,255,.15);
   box-shadow: 0 25px 70px rgba(0,0,0,.55);
 }
-.modal h2{margin:0 0 10px;}
+.modal h2{margin:0 0 20px;}
+
+/* Instructions modal ichidagi matnlar (inline style o'rniga) */
+.modal-subtext{
+  margin:0 0 10px;
+  color: rgba(229,231,235,.78);
+}
+.modal-list{
+  margin:0;
+  padding-left:18px;
+  text-align:left;
+  color: rgba(229,231,235,.9);
+  line-height:1.6;
+}
+.modal-actions{
+  margin-top:16px;
+}
+
+/* Instructions title with icon */
+.modal-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.info-icon{
+  width:26px;
+  height:26px;
+  border-radius:999px;
+
+  display:grid;
+  place-items:center;
+
+  font-size:16px;
+  font-weight:900;
+
+  /* Tugmalar bilan bir xil rang uslubi */
+  background: linear-gradient(135deg, rgba(34,197,94,1), rgba(56,189,248,1));
+  color:#06210f;
+
+  border:none;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}

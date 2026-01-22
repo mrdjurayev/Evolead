@@ -19,7 +19,7 @@
         <div class="content">
           <!-- Checklist -->
           <div class="checklist" id="checklist">
-            <div class="item"><input id="hw1" type="checkbox"><label for="hw1">Homework 1 changed</label></div>
+            <div class="item"><input id="hw1" type="checkbox"><label for="hw1">Homework 1</label></div>
             <div class="item"><input id="hw2" type="checkbox"><label for="hw2">Homework 2</label></div>
             <div class="item"><input id="hw3" type="checkbox"><label for="hw3">Homework 3</label></div>
             <div class="item"><input id="hw4" type="checkbox"><label for="hw4">Homework 4</label></div>
@@ -35,10 +35,10 @@
               <span class="badge">Tap the link</span>
             </div>
             <ul class="links">
-              <li><a href="https://linguapress.com/advanced/good-reasons#mplay"  rel="noopener"><span>link 1</span></a></li>
-              <li><a href=""  rel="noopener"><span>link 2</span></a></li>
-              <li><a href=""  rel="noopener"><span>link 3</span></a></li>
-              <li><a href=""  rel="noopener"><span>link 4</span></a></li>
+              <li><a href="https://linguapress.com/advanced/good-reasons#mplay" rel="noopener"><span>link 1</span></a></li>
+              <li><a href="" rel="noopener"><span>link 2</span></a></li>
+              <li><a href="" rel="noopener"><span>link 3</span></a></li>
+              <li><a href="" rel="noopener"><span>link 4</span></a></li>
             </ul>
           </aside>
         </div>
@@ -50,15 +50,43 @@
             <button id="checkBtn" type="button">Finish</button>
             <button id="resetBtn" type="button" class="reset">Reset all</button>
           </div>
+
+          <!-- ? tugma (layoutni siljitmaydi) -->
+          <button class="help-btn" id="helpBtn" type="button" aria-label="Instructions">?</button>
         </div>
+
       </div>
     </div>
   </main>
 
-  <!-- Sahifaning eng pastki qismi (oddiy footer) -->
+  <!-- Sahifaning eng pastki qismi -->
   <footer class="page-credit">Created by "Abdullox Djurayev"</footer>
 
-  <!-- Modal -->
+  <!-- Instructions Modal -->
+  <div class="modal-backdrop" id="helpModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <h2 id="helpTitle" class="modal-title">
+        <span class="info-icon">ℹ</span>
+        Instructions
+      </h2>
+
+      <!-- <p class="modal-subtext">Follow these steps:</p> -->
+
+      <ol class="modal-list">
+        <li>Please <b>reload</b> <span>&#8635;</span> the page to see the latest homework.</li>
+        <li>Complete each homework item and tick the checkbox.</li>
+        <li>Tap the <b style="text-decoration: underline;">link</b> and use these links during the homework.</li>
+        <li>Click <b>Finish</b> to verify everything is done.</li>
+        <li>Click <b>Reset all</b> to clear all checkboxes.</li>
+      </ol>
+
+      <div class="modal-actions">
+        <button id="helpOkBtn" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Congratulations Modal -->
   <div class="modal-backdrop" id="modal" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <h2>🎉 Congratulations!</h2>
