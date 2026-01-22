@@ -1,4 +1,8 @@
+// Har kuni shu qiymatni yangilang (masalan bugungi sana)
+const HOMEWORK_ID = "2026-01-22"; // <-- HAR KUNI O'ZGARTIRING
+
 const STORAGE_KEY = "homework_checklist_final";
+const META_KEY = "homework_meta_v1";
 
 const checklist = document.getElementById("checklist");
 const checkBtn = document.getElementById("checkBtn");
@@ -10,6 +14,27 @@ const okBtn = document.getElementById("okBtn");
 function getBoxes(){
   return [...checklist.querySelectorAll('input[type="checkbox"]')];
 }
+
+// NEW: yangi homework chiqqanda eski checklist saqlanmasin (hamma foydalanuvchida)
+(function invalidateOnNewHomework(){
+  try {
+    const metaRaw = localStorage.getItem(META_KEY);
+    const meta = metaRaw ? JSON.parse(metaRaw) : null;
+
+    if (!meta || meta.homeworkId !== HOMEWORK_ID) {
+      // faqat shu loyiha checklistiga tegishli narsalarni tozalaymiz
+      localStorage.removeItem(STORAGE_KEY);
+      statusMsg.textContent = "";
+
+      // yangi homework id ni eslab qolamiz
+      localStorage.setItem(META_KEY, JSON.stringify({ homeworkId: HOMEWORK_ID }));
+    }
+  } catch (_) {
+    // agar JSON buzilgan bo'lsa ham, hech narsa buzilmasin
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.setItem(META_KEY, JSON.stringify({ homeworkId: HOMEWORK_ID }));
+  }
+})();
 
 function loadState(){
   const raw = localStorage.getItem(STORAGE_KEY);
