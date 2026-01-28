@@ -1,108 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="uz">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Personal Development</title>
-   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZB2HSNN3H"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-2ZB2HSNN3H');
-  </script>
+  <title>Main Menu</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
+
   <main class="page">
-    <div class="wrap">
-      <div class="card">
-        <header>
-          <h1>Hello everybody!</h1>
-          <h3>This is our latest homework:</h3>
-        </header>
+    <section class="menu-wrapper">
 
-        <div class="content">
-          <!-- Checklist -->
-          <div class="checklist" id="checklist">
-            <div class="item"><input id="hw1" type="checkbox"><label for="hw1">Homework 1</label></div>
-            <div class="item"><input id="hw2" type="checkbox"><label for="hw2">Homework 2</label></div>
-            <div class="item"><input id="hw3" type="checkbox"><label for="hw3">Homework 3</label></div>
-            <div class="item"><input id="hw4" type="checkbox"><label for="hw4">Homework 4</label></div>
-            <div class="item"><input id="hw5" type="checkbox"><label for="hw5">Homework 5</label></div>
-            <div class="item"><input id="hw6" type="checkbox"><label for="hw6">Homework 6</label></div>
-            <div class="item"><input id="hw7" type="checkbox"><label for="hw7">Homework 7</label></div>
-          </div>
-
-          <!-- Useful links -->
-          <aside class="panel">
-            <div class="panel-head">
-              <h4 class="panel-title">Useful links</h4>
-              <span class="badge">Tap the link</span>
-            </div>
-            <ul class="links">
-              <li><a href="https://linguapress.com/advanced/good-reasons#mplay" rel="noopener"><span>link 1</span></a></li>
-              <li><a href="" rel="noopener"><span>link 2</span></a></li>
-              <li><a href="" rel="noopener"><span>link 3</span></a></li>
-              <li><a href="" rel="noopener"><span>link 4</span></a></li>
-            </ul>
-          </aside>
-        </div>
-
-        <div class="footer">
-          <div class="status" id="statusMsg"></div>
-
-          <div class="buttons">
-            <button id="checkBtn" type="button">Finish</button>
-            <button id="resetBtn" type="button" class="reset">Reset all</button>
-          </div>
-
-          <!-- ? tugma (layoutni siljitmaydi) -->
-          <button class="help-btn" id="helpBtn" type="button" aria-label="Instructions">?</button>
-        </div>
-
+      <!-- Main Menu (icon bilan) -->
+      <div class="title-row">
+        <span class="title-icon" aria-hidden="true">🧭</span>
+        <h1 class="title">Main Menu</h1>
       </div>
-    </div>
+
+      <div class="grid">
+        <!-- 1) Homework -->
+        <a class="card" href="/homework.html">
+          <span class="icon" aria-hidden="true">📝</span>
+          <span class="label">Homework</span>
+        </a>
+
+        <!-- 2) Translator -->
+        <a class="card" href="translator.html">
+          <span class="icon" aria-hidden="true">🌍</span>
+          <span class="label">Translator</span>
+        </a>
+
+        <!-- 3) Grammar fixer -->
+        <a class="card" href="grammar.html">
+          <span class="icon" aria-hidden="true">✅</span>
+          <span class="label">Grammar fixer</span>
+        </a>
+
+        <!-- 4) Vocabulary -->
+        <a class="card" href="vocabulary.html">
+          <span class="icon" aria-hidden="true">📚</span>
+          <span class="label">Vocabulary</span>
+        </a>
+
+        <!-- 5) News -->
+        <a class="card" href="news.html">
+          <span class="icon" aria-hidden="true">📰</span>
+          <span class="label">News</span>
+        </a>
+
+        <!-- 6) About -->
+        <a class="card" href="about.html">
+          <span class="icon" aria-hidden="true">ℹ️</span>
+          <span class="label">About</span>
+        </a>
+      </div>
+
+    </section>
   </main>
 
-  <!-- Sahifaning eng pastki qismi -->
-  <footer class="page-credit">Created by "Abdullox Djurayev"</footer>
-
-  <!-- Instructions Modal -->
-  <div class="modal-backdrop" id="helpModal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-      <h2 id="helpTitle" class="modal-title">
-        <span class="info-icon">ℹ</span>
-        Instructions
-      </h2>
-
-      <!-- <p class="modal-subtext">Follow these steps:</p> -->
-
-      <ol class="modal-list">
-        <li>Please <b>reload</b> <span>&#8635;</span> the page to see the latest homework.</li>
-        <li>Complete each homework item and tick the checkbox.</li>
-        <li>Tap the <b style="text-decoration: underline;">link</b> and use these links during the homework.</li>
-        <li>Click <b>Finish</b> to verify everything is done.</li>
-        <li>Click <b>Reset all</b> to clear all checkboxes.</li>
-      </ol>
-
-      <div class="modal-actions">
-        <button id="helpOkBtn" type="button">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Congratulations Modal -->
-  <div class="modal-backdrop" id="modal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <h2>🎉 Congratulations!</h2>
-      <p>You have completed all homework tasks.</p>
-      <button id="okBtn" type="button">OK</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
