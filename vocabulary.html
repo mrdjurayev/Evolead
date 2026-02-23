@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coming Soon</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #393939;
+        color: #f5f5f7;
+        font-family: -apple-system, BlinkMacSystemFont, 
+                     "SF Pro Text", "SF Pro Display",
+                     "Helvetica Neue", Arial, sans-serif;
+        text-align: center;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+
+    h1 {
+        font-size: 48px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+    }
+
+    p {
+        font-size: 18px;
+        color: #a1a1a6;
+        font-weight: 400;
+    }
+
+    /* Apple-style thin spinner */
+    .loader {
+        width: 32px;
+        height: 32px;
+        border: 2px solid rgba(255,255,255,0.15);
+        border-top: 2px solid #f5f5f7;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-top: 10px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+    <h1>Coming Soon.</h1>
+    <p>We’re working on something special.</p>
+    <div class="loader"></div>
+</div>
+
+</body>
+</html>
