@@ -2,23 +2,24 @@ const translatorCard = document.getElementById("translatorCard");
 const grammarCard = document.getElementById("grammarCard");
 const translatorModal = document.getElementById("translatorModal");
 const grammarModal = document.getElementById("grammarModal");
+const MODAL_OPEN_CLASS = "is-open";
 
 function openModal(modal) {
   if (!modal) return;
-  modal.classList.add("is-open");
+  modal.classList.add(MODAL_OPEN_CLASS);
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 }
 
 function closeModal(modal) {
   if (!modal) return;
-  modal.classList.remove("is-open");
+  modal.classList.remove(MODAL_OPEN_CLASS);
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
 }
 
 function getOpenModal() {
-  return document.querySelector(".modal.is-open");
+  return document.querySelector(`.modal.${MODAL_OPEN_CLASS}`);
 }
 
 function bindModalTrigger(trigger, modal) {

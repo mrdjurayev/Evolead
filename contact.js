@@ -1,5 +1,7 @@
 const contactForm = document.getElementById("contactForm");
 const contactStatus = document.getElementById("contactStatus");
+const SENT_QUERY_PARAM = "sent";
+const SENT_QUERY_VALUE = "1";
 
 if (contactForm) {
   contactForm.addEventListener("submit", (event) => {
@@ -19,7 +21,7 @@ if (contactForm) {
 
 if (contactStatus) {
   const params = new URLSearchParams(window.location.search);
-  if (params.get("sent") === "1") {
+  if (params.get(SENT_QUERY_PARAM) === SENT_QUERY_VALUE) {
     contactStatus.textContent = "Message sent. Thank you.";
     window.history.replaceState({}, "", window.location.pathname);
   }
