@@ -274,3 +274,21 @@ body{
   .modal-option{ transition: none; }
   .modal-option:hover{ transform: none; }
 }
+
+/* Remove mobile tap highlight globally */
+a,
+button,
+.card {
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+
+/* Prevent active flash background */
+a:active,
+button:active {
+  background: inherit;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
