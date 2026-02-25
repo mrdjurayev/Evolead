@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Evolead</title>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZB2HSNN3H"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-2ZB2HSNN3H");
+  </script>
+
+  <link rel="stylesheet" href="contact.css?v=20260225-1" />
+</head>
+<body>
+  <main class="contact-page">
+    <section class="contact-wrapper">
+      <a class="back-link" href="/index.html" aria-label="Main menu ga qaytish">&larr; Main Menu</a>
+
+      <h1 class="contact-title">Contact Us</h1>
+      <p class="contact-text">Savol yoki taklif bo'lsa, formani to'ldirib yuboring.</p>
+
+      <form class="contact-form" id="contactForm" action="https://formsubmit.co/admin@evolead.site" method="POST">
+        <input type="hidden" name="_subject" value="Evolead Contact Form" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_next" value="https://evolead.site/contact.html?sent=1" />
+
+        <label class="contact-label" for="contactName">Ism</label>
+        <input class="contact-input" id="contactName" name="name" type="text" autocomplete="name" required />
+
+        <label class="contact-label" for="contactEmail">Email</label>
+        <input class="contact-input" id="contactEmail" name="email" type="email" autocomplete="email" required />
+
+        <label class="contact-label" for="contactMessage">Xabar</label>
+        <textarea class="contact-textarea" id="contactMessage" name="message" rows="5" required></textarea>
+
+        <button class="contact-submit" type="submit">Yuborish</button>
+      </form>
+
+      <p class="contact-note">Birinchi yuborishda emailga tasdiqlash xati keladi.</p>
+      <p class="contact-status" id="contactStatus" aria-live="polite"></p>
+
+      <a
+        class="contact-mailto"
+        href="mailto:admin@evolead.site?subject=Evolead%20Support&body=Salom%2C%20Evolead%20jamoasi."
+      >
+        Yoki email client orqali yuborish
+      </a>
+    </section>
+  </main>
+
+  <script src="contact.js?v=20260225-1"></script>
+</body>
+</html>
