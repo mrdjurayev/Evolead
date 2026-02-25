@@ -1,10 +1,6 @@
+/* styles.css */
 /* =========================
    Evolead-style (minimal / clean / no extra colors)
-   Keeps your current layout ideas:
-   - Centered page (vertical + horizontal)
-   - Grid: phones mostly 2 columns, very small 1 column, large 3 columns
-   - Near-square cards
-   - Icon + text always centered
    ========================= */
 
 * { box-sizing: border-box; }
@@ -37,8 +33,8 @@ body{
 .page{
   min-height: 100vh;
   display: flex;
-  align-items: center;      /* vertical */
-  justify-content: center;  /* horizontal */
+  align-items: center;
+  justify-content: center;
   padding: 14px 14px;
 }
 
@@ -71,17 +67,13 @@ body{
   display: grid;
   place-items: center;
   border-radius: 12px;
-  background: rgba(15, 23, 42, 0.04); /* neutral, no color pop */
+  background: rgba(15, 23, 42, 0.04);
   border: 1px solid rgba(15, 23, 42, 0.08);
   font-size: 18px;
   line-height: 1;
 }
 
-/* GRID
-   - Default: 2 columns for phones
-   - Very small: 1 column
-   - Large: 3 columns
-*/
+/* GRID */
 .grid{
   display: grid;
   gap: var(--gap);
@@ -125,7 +117,7 @@ body{
   background: #ffffff;
 }
 
-/* ICON (neutral) */
+/* ICON */
 .icon{
   width: 36px;
   height: 36px;
@@ -136,7 +128,7 @@ body{
   line-height: 1;
 
   border-radius: 12px;
-  background: rgba(15, 23, 42, 0.04); /* neutral */
+  background: rgba(15, 23, 42, 0.04);
   border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
@@ -154,15 +146,11 @@ body{
   overflow-wrap: anywhere;
 }
 
-/* VERY small screens:
-   - keep 1 column
-   - reduce top/bottom padding for comfort
-   - slightly smaller inner spacing
-*/
+/* VERY small screens */
 @media (max-width: 360px){
   :root{ --gap: 10px; }
 
-  .page{ padding: 8px 10px; } /* smaller top/bottom */
+  .page{ padding: 8px 10px; }
   .menu-wrapper{ max-width: 520px; }
 
   .title-row{ gap: 8px; margin-bottom: 10px; }
@@ -191,4 +179,98 @@ body{
 @media (prefers-reduced-motion: reduce){
   .card{ transition: none; }
   .card:hover{ transform: none; }
+}
+
+
+/* =========================
+   Translator Modal
+   ========================= */
+
+.modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.modal.is-open{
+  display: block;
+}
+
+.modal-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.40);
+}
+
+.modal-panel{
+  position: relative;
+  width: min(520px, calc(100% - 28px));
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  border-radius: 16px;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+
+.modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.modal-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.modal-close{
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.04);
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-body{
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.modal-option{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.03);
+  border-radius: 12px;
+
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
+.modal-option:hover{
+  background: rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .modal-option{ transition: none; }
+  .modal-option:hover{ transform: none; }
 }

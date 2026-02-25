@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!doctype html>
 <html lang="uz">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Personal Development</title>
 
-    <!-- Google Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZB2HSNN3H"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,9 +14,35 @@
     gtag('js', new Date());
     gtag('config', 'G-2ZB2HSNN3H');
   </script>
-  
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+<!-- Grammar Fixer Modal -->
+<div class="modal" id="grammarModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="true"></div>
+
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="grammarModalTitle">
+    <div class="modal-header">
+      <h2 class="modal-title" id="grammarModalTitle">Choose Grammar Mode</h2>
+      <button class="modal-close" type="button" aria-label="Close" data-close="true">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- O'zingizning real linklaringizni qo'ying -->
+      <a class="modal-option" href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer">
+        English Only
+      </a>
+
+      <a class="modal-option" href="https://chatgpt.com/g/g-699ec24d2238819191fd2f5b3b6c678d-grammar-fixer-uz">
+        English-Uzbek
+      </a>
+
+      <a class="modal-option" href="https://chatgpt.com/g/g-699ec1c475d48191a40b3e291eecd3fd-grammar-fixer-ru">
+        English-Russian
+      </a>
+    </div>
+  </div>
+</div>
 <body>
 
   <main class="page">
@@ -34,16 +61,15 @@
           <span class="label">Homework</span>
         </a>
 
-        <!-- 2) Translator -->
-        <a class="card" href="https://chatgpt.com/g/g-699b5a8f59a88191a59bd0da75b106e1-translator">
+        <!-- 2) Translator (modal opener) -->
+        <a class="card" id="translatorCard" href="https://chatgpt.com/g/g-699b5a8f59a88191a59bd0da75b106e1-translator">
           <span class="icon" aria-hidden="true">🌍</span>
           <span class="label">Translator</span>
         </a>
 
-        <!-- 3) Grammar fixer -->
-        <a class="card" href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer">
+        <a class="card" id="grammarCard" href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer">
           <span class="icon" aria-hidden="true">✅</span>
-          <span class="label">Grammar fixer</span>
+          <span class="label">Grammar Fixer</span>
         </a>
 
         <!-- 4) Vocabulary -->
@@ -68,5 +94,33 @@
     </section>
   </main>
 
+  <!-- Translator Options Modal -->
+  <div class="modal" id="translatorModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="translatorModalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="translatorModalTitle">Choose Translation Type</h2>
+        <button class="modal-close" type="button" aria-label="Close" data-close="true">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Quyidagi linklarni o'zingizning real linklaringiz bilan almashtiring -->
+        <a class="modal-option" href="https://chatgpt.com/g/g-699b5a8f59a88191a59bd0da75b106e1-translator" rel="noopener">
+          English Only
+        </a>
+
+        <a class="modal-option" href="https://chatgpt.com/g/g-699ec32d060081918036a9f1ee482f1f-translator-uz" rel="noopener">
+          English - Uzbek
+        </a>
+
+        <a class="modal-option" href="https://chatgpt.com/g/g-699ec54f85b881918e12ed9ef067d8b2-translator-ru" rel="noopener">
+          English - Russian
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
 </body>
 </html>
