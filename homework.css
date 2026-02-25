@@ -24,11 +24,25 @@ body {
 }
 
 .back-menu {
-  display: inline-block;
-  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 10px;
   margin: 8px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.03);
   color: #111;
   text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.back-menu:hover {
+  background: rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
 }
 
 .page {
