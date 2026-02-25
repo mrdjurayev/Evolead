@@ -12,7 +12,7 @@ if (contactForm) {
     const submitButton = contactForm.querySelector(".contact-submit");
     if (submitButton) {
       submitButton.disabled = true;
-      submitButton.textContent = "Yuborilmoqda...";
+      submitButton.textContent = "Sending...";
     }
   });
 }
@@ -20,7 +20,7 @@ if (contactForm) {
 if (contactStatus) {
   const params = new URLSearchParams(window.location.search);
   if (params.get("sent") === "1") {
-    contactStatus.textContent = "Xabar yuborildi. Rahmat.";
+    contactStatus.textContent = "Message sent. Thank you.";
     window.history.replaceState({}, "", window.location.pathname);
   }
 }
