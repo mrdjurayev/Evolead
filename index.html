@@ -17,50 +17,20 @@
 
   <link rel="stylesheet" href="styles.css" />
 </head>
-<!-- Grammar Fixer Modal -->
-<div class="modal" id="grammarModal" aria-hidden="true">
-  <div class="modal-backdrop" data-close="true"></div>
-
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="grammarModalTitle">
-    <div class="modal-header">
-      <h2 class="modal-title" id="grammarModalTitle">Choose Grammar Mode</h2>
-      <button class="modal-close" type="button" aria-label="Close" data-close="true">✕</button>
-    </div>
-
-    <div class="modal-body">
-      <a class="modal-option" href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer">
-        English Only
-      </a>
-
-      <a class="modal-option" href="https://chatgpt.com/g/g-699ec24d2238819191fd2f5b3b6c678d-grammar-fixer-uz">
-        English-Uzbek
-      </a>
-
-      <a class="modal-option" href="https://chatgpt.com/g/g-699ec1c475d48191a40b3e291eecd3fd-grammar-fixer-ru">
-        English-Russian
-      </a>
-    </div>
-  </div>
-</div>
 <body>
-
   <main class="page">
     <section class="menu-wrapper">
-
-      <!-- Main Menu (icon bilan) -->
       <div class="title-row">
         <span class="title-icon" aria-hidden="true">🧭</span>
         <h1 class="title">Main Menu</h1>
       </div>
 
       <div class="grid">
-        <!-- 1) Homework -->
         <a class="card" href="/homework.html">
           <span class="icon" aria-hidden="true">📝</span>
           <span class="label">Homework</span>
         </a>
 
-        <!-- 2) Translator (modal opener) -->
         <a class="card" id="translatorCard" href="https://chatgpt.com/g/g-699b5a8f59a88191a59bd0da75b106e1-translator">
           <span class="icon" aria-hidden="true">🌍</span>
           <span class="label">Translator</span>
@@ -71,29 +41,79 @@
           <span class="label">Grammar Fixer</span>
         </a>
 
-        <!-- 4) Vocabulary -->
         <a class="card" href="vocabulary.html">
           <span class="icon" aria-hidden="true">📚</span>
           <span class="label">Vocabulary</span>
         </a>
 
-        <!-- 5) News -->
         <a class="card" href="news.html">
           <span class="icon" aria-hidden="true">📰</span>
           <span class="label">News</span>
         </a>
 
-        <!-- 6) About -->
         <a class="card" href="about.html">
           <span class="icon" aria-hidden="true">ℹ️</span>
           <span class="label">About</span>
         </a>
       </div>
 
+      <section class="contact-section" aria-label="Contact us">
+        <h2 class="contact-title">Contact Us</h2>
+        <p class="contact-text">Savol yoki taklif bo'lsa, formani to'ldirib yuboring.</p>
+
+        <form class="contact-form" action="https://formsubmit.co/admin@evolead.site" method="POST">
+          <input type="hidden" name="_subject" value="Evolead Contact Form" />
+          <input type="hidden" name="_template" value="table" />
+
+          <label class="contact-label" for="contactName">Ism</label>
+          <input class="contact-input" id="contactName" name="name" type="text" autocomplete="name" required />
+
+          <label class="contact-label" for="contactEmail">Email</label>
+          <input class="contact-input" id="contactEmail" name="email" type="email" autocomplete="email" required />
+
+          <label class="contact-label" for="contactMessage">Xabar</label>
+          <textarea class="contact-textarea" id="contactMessage" name="message" rows="4" required></textarea>
+
+          <button class="contact-submit" type="submit">Yuborish</button>
+        </form>
+
+        <p class="contact-note">Birinchi yuborishda emailga tasdiqlash xati keladi.</p>
+
+        <a
+          class="contact-button"
+          href="mailto:admin@evolead.site?subject=Evolead%20Support&body=Salom%2C%20Evolead%20jamoasi."
+        >
+          Yoki email client orqali yuborish
+        </a>
+      </section>
     </section>
   </main>
 
-  <!-- Translator Options Modal -->
+  <div class="modal" id="grammarModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="grammarModalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="grammarModalTitle">Choose Grammar Mode</h2>
+        <button class="modal-close" type="button" aria-label="Close" data-close="true">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <a class="modal-option" href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer">
+          English Only
+        </a>
+
+        <a class="modal-option" href="https://chatgpt.com/g/g-699ec24d2238819191fd2f5b3b6c678d-grammar-fixer-uz">
+          English-Uzbek
+        </a>
+
+        <a class="modal-option" href="https://chatgpt.com/g/g-699ec1c475d48191a40b3e291eecd3fd-grammar-fixer-ru">
+          English-Russian
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="translatorModal" aria-hidden="true">
     <div class="modal-backdrop" data-close="true"></div>
 

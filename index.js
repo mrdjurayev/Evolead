@@ -1,49 +1,52 @@
 const translatorCard = document.getElementById("translatorCard");
 const grammarCard = document.getElementById("grammarCard");
-
 const translatorModal = document.getElementById("translatorModal");
 const grammarModal = document.getElementById("grammarModal");
 
 function openModal(modal) {
+  if (!modal) return;
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 }
 
 function closeModal(modal) {
+  if (!modal) return;
   modal.classList.remove("is-open");
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
 }
 
-// Translator
-translatorCard.addEventListener("click", (e) => {
-  e.preventDefault();
-  openModal(translatorModal);
-});
+function getOpenModal() {
+  return document.querySelector(".modal.is-open");
+}
 
-// Grammar
-grammarCard.addEventListener("click", (e) => {
-  e.preventDefault();
-  openModal(grammarModal);
-});
+function bindModalTrigger(trigger, modal) {
+  if (!trigger || !modal) return;
 
-// Close logic (ikkala modal uchun)
-document.addEventListener("click", (e) => {
-  if (e.target.dataset.close === "true") {
-    const openModalElement = document.querySelector(".modal.is-open");
-    if (openModalElement) {
-      closeModal(openModalElement);
-    }
+  trigger.addEventListener("click", (event) => {
+    event.preventDefault();
+    openModal(modal);
+  });
+}
+
+bindModalTrigger(translatorCard, translatorModal);
+bindModalTrigger(grammarCard, grammarModal);
+
+document.addEventListener("click", (event) => {
+  if (event.target.dataset.close !== "true") return;
+
+  const openModalElement = getOpenModal();
+  if (openModalElement) {
+    closeModal(openModalElement);
   }
 });
 
-// ESC bosilsa yopiladi
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    const openModalElement = document.querySelector(".modal.is-open");
-    if (openModalElement) {
-      closeModal(openModalElement);
-    }
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  const openModalElement = getOpenModal();
+  if (openModalElement) {
+    closeModal(openModalElement);
   }
 });
