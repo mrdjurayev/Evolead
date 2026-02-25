@@ -1,5 +1,5 @@
 // Har kuni shu qiymatni yangilang (masalan bugungi sana)
-const HOMEWORK_ID = "2026-01-22"; // <-- HAR KUNI O'ZGARTIRING
+const HOMEWORK_ID = "2026-02-25"; // <-- HAR KUNI O'ZGARTIRING
 
 const STORAGE_KEY = "homework_checklist_final";
 const META_KEY = "homework_meta_v1";
