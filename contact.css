@@ -133,7 +133,15 @@ body {
   min-height: 20px;
   margin: 10px 0 0;
   font-size: 13px;
+  color: var(--muted);
+}
+
+.contact-status.is-success {
   color: #166534;
+}
+
+.contact-status.is-error {
+  color: #b91c1c;
 }
 
 .contact-mailto {
