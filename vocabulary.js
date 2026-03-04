@@ -5,6 +5,9 @@ const searchInput = document.getElementById("searchInput");
 const unitFilter = document.getElementById("unitFilter");
 const statusFilter = document.getElementById("statusFilter");
 const resetProgressBtn = document.getElementById("resetProgress");
+const resetConfirmModal = document.getElementById("resetConfirmModal");
+const confirmResetYesBtn = document.getElementById("confirmResetYes");
+const confirmResetNoBtn = document.getElementById("confirmResetNo");
 
 const totalCount = document.getElementById("totalCount");
 const masteredCount = document.getElementById("masteredCount");
@@ -60,11 +63,43 @@ function clearUnitProgress(unit) {
 }
 
 function clearAllUnitsProgress() {
-  const confirmed = window.confirm("Are you sure you want to clear progress for all units?");
-  if (!confirmed) return false;
-
   localStorage.removeItem(STORAGE_KEY);
-  return true;
+}
+
+const isResetModalReady = resetConfirmModal && confirmResetYesBtn && confirmResetNoBtn;
+let pendingResetDecision = null;
+
+function isResetModalOpen() {
+  return Boolean(resetConfirmModal && resetConfirmModal.classList.contains("open"));
+}
+
+function setResetModalOpen(isOpen) {
+  if (!resetConfirmModal) return;
+
+  resetConfirmModal.classList.toggle("open", isOpen);
+  resetConfirmModal.setAttribute("aria-hidden", isOpen ? "false" : "true");
+}
+
+function resolveResetDecision(decision) {
+  if (!pendingResetDecision) return;
+
+  const onDecision = pendingResetDecision;
+  pendingResetDecision = null;
+  setResetModalOpen(false);
+  onDecision(decision);
+}
+
+function confirmAllUnitsReset(onDecision) {
+  if (!isResetModalReady) {
+    onDecision(window.confirm("Are you sure you want to clear progress for all units?"));
+    return;
+  }
+
+  if (pendingResetDecision) return;
+
+  pendingResetDecision = onDecision;
+  setResetModalOpen(true);
+  confirmResetNoBtn.focus();
 }
 
 function getScopeWords() {
@@ -193,14 +228,39 @@ if (isVocabularyDomReady) {
     const unit = unitFilter.value;
 
     if (unit === "all") {
-      const isCleared = clearAllUnitsProgress();
-      if (!isCleared) return;
-    } else {
-      clearUnitProgress(unit);
+      confirmAllUnitsReset((isConfirmed) => {
+        if (!isConfirmed) return;
+        clearAllUnitsProgress();
+        render();
+      });
+      return;
     }
 
+    clearUnitProgress(unit);
     render();
   });
+
+  if (isResetModalReady) {
+    confirmResetYesBtn.addEventListener("click", () => {
+      resolveResetDecision(true);
+    });
+
+    confirmResetNoBtn.addEventListener("click", () => {
+      resolveResetDecision(false);
+    });
+
+    resetConfirmModal.addEventListener("click", (event) => {
+      if (event.target === resetConfirmModal) {
+        resolveResetDecision(false);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && isResetModalOpen()) {
+        resolveResetDecision(false);
+      }
+    });
+  }
 
   render();
 }

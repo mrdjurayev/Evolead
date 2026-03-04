@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vocabulary | Evolead</title>
-  <link rel="stylesheet" href="vocabulary.css?v=20260304-2" />
+  <link rel="stylesheet" href="vocabulary.css?v=20260304-3" />
 </head>
 <body>
   <a href="index.html" class="back-menu">&larr; back to menu</a>
@@ -75,7 +75,25 @@
     </section>
   </main>
 
+  <div
+    id="resetConfirmModal"
+    class="confirm-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="resetConfirmTitle"
+    aria-hidden="true"
+  >
+    <div class="confirm-modal-card">
+      <h2 id="resetConfirmTitle">Clear all units?</h2>
+      <p>Are you sure you want to clear progress for all units?</p>
+      <div class="confirm-modal-actions">
+        <button id="confirmResetNo" class="confirm-btn confirm-no" type="button">No</button>
+        <button id="confirmResetYes" class="confirm-btn confirm-yes" type="button">Yes</button>
+      </div>
+    </div>
+  </div>
+
   <script src="vocabulary-data.js?v=20260304-2"></script>
-  <script src="vocabulary.js?v=20260304-5"></script>
+  <script src="vocabulary.js?v=20260304-6"></script>
 </body>
 </html>
