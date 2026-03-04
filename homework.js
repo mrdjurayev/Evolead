@@ -94,30 +94,43 @@ function resetAll() {
   closeHelpModal();
 }
 
-checklist.addEventListener("change", saveState);
-checkBtn.addEventListener("click", updateStatusMessage);
-resetBtn.addEventListener("click", resetAll);
-okBtn.addEventListener("click", closeCongratsModal);
-helpBtn.addEventListener("click", openHelpModal);
-helpOkBtn.addEventListener("click", closeHelpModal);
+const isHomeworkDomReady =
+  checklist &&
+  checkBtn &&
+  resetBtn &&
+  statusMsg &&
+  modal &&
+  okBtn &&
+  helpBtn &&
+  helpModal &&
+  helpOkBtn;
 
-helpModal.addEventListener("click", (event) => {
-  if (event.target === helpModal) {
-    closeHelpModal();
-  }
-});
+if (isHomeworkDomReady) {
+  checklist.addEventListener("change", saveState);
+  checkBtn.addEventListener("click", updateStatusMessage);
+  resetBtn.addEventListener("click", resetAll);
+  okBtn.addEventListener("click", closeCongratsModal);
+  helpBtn.addEventListener("click", openHelpModal);
+  helpOkBtn.addEventListener("click", closeHelpModal);
 
-document.addEventListener("keydown", (event) => {
-  if (event.key !== "Escape") return;
+  helpModal.addEventListener("click", (event) => {
+    if (event.target === helpModal) {
+      closeHelpModal();
+    }
+  });
 
-  if (helpModal.classList.contains(OPEN_CLASS)) {
-    closeHelpModal();
-  }
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
 
-  if (modal.classList.contains(OPEN_CLASS)) {
-    closeCongratsModal();
-  }
-});
+    if (helpModal.classList.contains(OPEN_CLASS)) {
+      closeHelpModal();
+    }
 
-invalidateOnNewHomework();
-loadState();
+    if (modal.classList.contains(OPEN_CLASS)) {
+      closeCongratsModal();
+    }
+  });
+
+  invalidateOnNewHomework();
+  loadState();
+}

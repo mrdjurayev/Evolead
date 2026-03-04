@@ -130,26 +130,39 @@ function render() {
   renderList(progress);
 }
 
-searchInput.addEventListener("input", render);
-unitFilter.addEventListener("change", render);
-statusFilter.addEventListener("change", render);
+const isVocabularyDomReady =
+  searchInput &&
+  unitFilter &&
+  statusFilter &&
+  resetProgressBtn &&
+  totalCount &&
+  masteredCount &&
+  leftCount &&
+  listStatus &&
+  vocabList;
 
-vocabList.addEventListener("change", (event) => {
-  const target = event.target;
-  if (!(target instanceof HTMLInputElement) || target.type !== "checkbox") return;
+if (isVocabularyDomReady) {
+  searchInput.addEventListener("input", render);
+  unitFilter.addEventListener("change", render);
+  statusFilter.addEventListener("change", render);
 
-  const wordId = target.dataset.wordId;
-  if (!wordId) return;
+  vocabList.addEventListener("change", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || target.type !== "checkbox") return;
 
-  const progress = loadProgress();
-  progress[wordId] = target.checked;
-  saveProgress(progress);
+    const wordId = target.dataset.wordId;
+    if (!wordId) return;
+
+    const progress = loadProgress();
+    progress[wordId] = target.checked;
+    saveProgress(progress);
+    render();
+  });
+
+  resetProgressBtn.addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    render();
+  });
+
   render();
-});
-
-resetProgressBtn.addEventListener("click", () => {
-  localStorage.removeItem(STORAGE_KEY);
-  render();
-});
-
-render();
+}
