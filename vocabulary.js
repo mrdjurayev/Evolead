@@ -37,6 +37,36 @@ function saveProgress(progress) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
+function clearUnitProgress(unit) {
+  const progress = loadProgress();
+  let changed = false;
+
+  WORDS.forEach((entry) => {
+    if (String(entry.unit) !== unit) return;
+    if (!Object.prototype.hasOwnProperty.call(progress, entry.id)) return;
+
+    delete progress[entry.id];
+    changed = true;
+  });
+
+  if (!changed) return;
+
+  if (Object.keys(progress).length === 0) {
+    localStorage.removeItem(STORAGE_KEY);
+    return;
+  }
+
+  saveProgress(progress);
+}
+
+function clearAllUnitsProgress() {
+  const confirmed = window.confirm("Are you sure you want to clear progress for all units?");
+  if (!confirmed) return false;
+
+  localStorage.removeItem(STORAGE_KEY);
+  return true;
+}
+
 function getScopeWords() {
   const unit = unitFilter.value;
   if (unit === "all") return WORDS;
@@ -160,7 +190,15 @@ if (isVocabularyDomReady) {
   });
 
   resetProgressBtn.addEventListener("click", () => {
-    localStorage.removeItem(STORAGE_KEY);
+    const unit = unitFilter.value;
+
+    if (unit === "all") {
+      const isCleared = clearAllUnitsProgress();
+      if (!isCleared) return;
+    } else {
+      clearUnitProgress(unit);
+    }
+
     render();
   });
 
