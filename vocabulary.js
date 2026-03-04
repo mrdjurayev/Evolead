@@ -37,6 +37,12 @@ function saveProgress(progress) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
+function getScopeWords() {
+  const unit = unitFilter.value;
+  if (unit === "all") return WORDS;
+  return WORDS.filter((entry) => String(entry.unit) === unit);
+}
+
 function getFilteredWords(progress) {
   const query = searchInput.value.trim().toLowerCase();
   const unit = unitFilter.value;
@@ -62,12 +68,12 @@ function getFilteredWords(progress) {
   });
 }
 
-function renderStats(progress) {
-  const mastered = WORDS.filter((entry) => progress[entry.id]).length;
+function renderStats(progress, scopeWords) {
+  const mastered = scopeWords.filter((entry) => progress[entry.id]).length;
 
-  totalCount.textContent = String(WORDS.length);
+  totalCount.textContent = String(scopeWords.length);
   masteredCount.textContent = String(mastered);
-  leftCount.textContent = String(WORDS.length - mastered);
+  leftCount.textContent = String(scopeWords.length - mastered);
 }
 
 function renderList(progress) {
@@ -119,7 +125,8 @@ function renderList(progress) {
 
 function render() {
   const progress = loadProgress();
-  renderStats(progress);
+  const scopeWords = getScopeWords();
+  renderStats(progress, scopeWords);
   renderList(progress);
 }
 
