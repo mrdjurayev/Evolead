@@ -1,4 +1,4 @@
-const HOMEWORK_ID = "2026-03-07";
+const HOMEWORK_ID = "2026-03-11"; //year-month-date
 const STORAGE_KEY = "homework_checklist_final";
 const META_KEY = "homework_meta_v1";
 const OPEN_CLASS = "open";
