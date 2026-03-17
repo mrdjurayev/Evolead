@@ -3,134 +3,217 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>News</title>
+  <title>News Practice | Evolead</title>
+  <meta
+    name="description"
+    content="Practice English with a guided news page that combines video, summary points, vocabulary, and discussion prompts."
+  />
+  <meta name="theme-color" content="#2f7d57" />
+  <link rel="canonical" href="https://evolead.site/news.html" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZB2HSNN3H"></script>
+  <script src="analytics.js?v=20260317-1"></script>
+
+  <link rel="stylesheet" href="shared.css?v=20260317-1" />
   <style>
-    body {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      background-color: #fcfcfc;
-      color: #333;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      line-height: 1.7;
+    .news-layout {
+      display: grid;
+      gap: 18px;
     }
 
-    .back-menu {
-      display: inline-flex;
-      align-items: center;
-      min-height: 36px;
-      padding: 0 10px;
-      margin: 8px 0 12px;
-      border: 1px solid rgba(15, 23, 42, 0.12);
-      border-radius: 10px;
-      background: rgba(15, 23, 42, 0.03);
-      color: #000;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 13px;
-      transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    .news-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(290px, 0.9fr);
+      gap: 18px;
     }
 
-    .back-menu:hover {
-      background: rgba(15, 23, 42, 0.06);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+    .news-video iframe {
+      aspect-ratio: 16 / 9;
+      min-height: 320px;
     }
 
-    .video {
-      display: block;
-      width: 100%;
-      height: 415px;
-      border: 0;
+    .news-summary p + p {
+      margin-top: 14px;
     }
 
-    .content-wrapper {
-      padding: 40px;
-      border-top: 4px solid #000;
-      border-radius: 2px;
-      background-color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    .news-label {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    h1 {
-      margin-bottom: 30px;
-      color: #111;
-      font-size: 2.5rem;
-      line-height: 1.2;
-      text-align: center;
+    .vocabulary-grid,
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    p {
-      margin-bottom: 20px;
-      font-size: 1.1rem;
-      text-align: justify;
+    .mini-card {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow-soft);
     }
 
-    .highlight-text {
-      color: #d32f2f;
-      font-weight: 600;
+    .mini-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      font-weight: 800;
     }
 
-    .footer {
-      margin-top: 50px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-      color: #777;
-      font-size: 0.85rem;
-      text-align: center;
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    @media (max-width: 940px) {
+      .news-grid,
+      .vocabulary-grid,
+      .question-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-menu">&larr; back to menu</a>
+  <div class="site-shell">
+    <div class="site-page news-layout">
+      <div class="site-topbar">
+        <a class="site-back-link" href="index.html">&larr; Main Menu</a>
+        <span class="site-badge">News Practice</span>
+      </div>
 
-  <iframe
-    class="video"
-    src="https://www.youtube.com/embed/oBDSwluGo64?si=yY5sZYKms5vu4yxt"
-    title="YouTube video player"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen
-  ></iframe>
+      <section class="page-hero" aria-labelledby="newsTitle">
+        <span class="section-kicker">Video + Reading + Speaking</span>
+        <h1 class="section-title" id="newsTitle">The Double-Edged Sword of Smart Glasses</h1>
+        <p class="section-copy">
+          Use this page like a lesson: watch the video, read the guided summary, review the key vocabulary,
+          and answer the discussion prompts out loud or in writing.
+        </p>
+        <div class="inline-pills">
+          <div class="metric-pill">
+            <strong>Theme</strong>
+            <span>Technology and privacy</span>
+          </div>
+          <div class="metric-pill">
+            <strong>Skills</strong>
+            <span>Listening, reading, speaking, opinion writing</span>
+          </div>
+          <div class="metric-pill">
+            <strong>Suggested use</strong>
+            <span>15 to 20 minutes of focused practice</span>
+          </div>
+        </div>
+      </section>
 
-  <div class="content-wrapper">
-    <h1>The Double-Edged Sword of Smart Glasses</h1>
+      <section class="news-grid">
+        <article class="surface-card news-summary">
+          <p class="news-label">Practice Summary</p>
+          <p>
+            Smart glasses are becoming more common because they blend into normal daily life while offering
+            cameras, speakers, and microphones in a familiar form. The appeal is convenience, but the same
+            convenience creates a growing concern about unnoticed recording in public.
+          </p>
+          <p>
+            Reports highlighted cases where women were secretly recorded in everyday places such as airports
+            and grocery stores. The main ethical problem is not only the filming itself, but the fact that
+            people may be turned into content without their knowledge or permission.
+          </p>
+          <p>
+            Some creators defend this behavior by saying the videos are useful for confidence coaching or
+            social advice. Critics argue that this explanation avoids the real issue: filming strangers in
+            vulnerable moments can feel invasive even when it happens in public.
+          </p>
+          <p>
+            Even though manufacturers include a small recording light, many people either do not notice it or
+            do not know what it means. That leaves an open debate between what is legal, what is respectful,
+            and how privacy should be protected as wearable technology becomes harder to detect.
+          </p>
 
-    <p>
-      The landscape of wearable technology is rapidly shifting with the rise of smart glasses, notably the
-      <span class="highlight-text">Meta and Ray-Ban collaboration</span>. These devices are designed to
-      function and look like ordinary eyewear while housing integrated speakers, cameras, and microphones
-      intended for seamless content creation. Unlike previous iterations of tech gadgets, these are
-      specifically marketed toward everyday users, making them increasingly common in public spaces.
-    </p>
+          <div class="accent-note">
+            Suggested speaking task: explain whether convenience should ever be allowed to reduce other
+            people’s sense of safety in public spaces.
+          </div>
+        </article>
 
-    <p>
-      However, this technological advancement has introduced a significant privacy concern regarding
-      <span class="highlight-text">covert filming without consent</span>. Investigations have revealed a
-      disturbing trend on social media where creators use these glasses to record women in public locations
-      such as airports and grocery stores without their knowledge. Victims have expressed feeling violated
-      and "gross" after discovering their interactions were posted online to audiences reaching tens of
-      millions of viewers.
-    </p>
+        <div class="section-stack">
+          <article class="media-card news-video">
+            <iframe
+              src="https://www.youtube.com/embed/oBDSwluGo64?si=yY5sZYKms5vu4yxt"
+              title="Smart glasses practice video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </article>
 
-    <p>
-      A common justification used by those posting such content is the claim of providing "confidence
-      coaching" or social skills guidance for men. Critics and victims argue that this is merely a "cop-out,"
-      as the videos often capture individuals in vulnerable states while they are cornered or simply going
-      about their daily routines. This practice places an additional burden on women to be constantly vigilant
-      about whether the people they interact with are secretly recording them.
-    </p>
+          <article class="surface-card">
+            <h2>Quick takeaways</h2>
+            <ul class="site-list">
+              <li>Smart glasses look ordinary, which makes hidden recording harder to detect.</li>
+              <li>Privacy concerns grow when people are filmed without consent and shared online.</li>
+              <li>Legal permission and ethical behavior are not always the same thing.</li>
+              <li>Technology design choices can influence how safe public spaces feel.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
-    <p>
-      From a safety standpoint, while manufacturers like Meta have included a white LED light to signal when
-      the camera is recording, many victims report not noticing it at all. Furthermore, tutorials have
-      surfaced online teaching users how to hide or cover this light to maintain secrecy. Legally, while
-      recording in public places is often protected under the First Amendment in the U.S., the ethical
-      boundaries and international data protection laws remain complex areas of debate.
-    </p>
+      <section class="surface-card" aria-labelledby="vocabularyTitle">
+        <h2 id="vocabularyTitle">Key vocabulary for discussion</h2>
+        <div class="vocabulary-grid">
+          <article class="mini-card">
+            <h3>Covert filming</h3>
+            <p>Recording someone secretly, especially when they do not realize it is happening.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Consent</h3>
+            <p>Permission that is clearly given before something happens.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Vigilant</h3>
+            <p>Carefully watchful because there may be a risk or problem nearby.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Boundary</h3>
+            <p>A limit that marks what behavior is acceptable and what behavior goes too far.</p>
+          </article>
+        </div>
+      </section>
 
-    <div class="footer">
-      Summary based on CNN Creators report on Smart Glasses and Privacy.
+      <section class="surface-card" aria-labelledby="questionTitle">
+        <h2 id="questionTitle">Discussion prompts</h2>
+        <div class="question-grid">
+          <article class="mini-card">
+            <h3>Opinion</h3>
+            <p>Do you think smart glasses are mostly useful or mostly risky? Why?</p>
+          </article>
+          <article class="mini-card">
+            <h3>Ethics</h3>
+            <p>Should public recording rules change when cameras become harder to notice?</p>
+          </article>
+          <article class="mini-card">
+            <h3>Personal response</h3>
+            <p>How would you feel if you discovered that a short conversation with you had been posted online?</p>
+          </article>
+          <article class="mini-card">
+            <h3>Solutions</h3>
+            <p>What design or policy changes could help balance innovation with personal privacy?</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <span>Practice note: this page is a guided lesson summary based on a report about smart glasses and privacy.</span>
+        <a href="homework.html">Return to the homework flow</a>
+      </footer>
     </div>
   </div>
 </body>

@@ -3,77 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vocabulary</title>
-  <link rel="stylesheet" href="vocabulary.css?v=20260304-3" />
+  <title>Vocabulary | Evolead</title>
+  <meta
+    name="description"
+    content="Practice Evolead vocabulary with search, unit filters, progress tracking, and a random self-quiz card."
+  />
+  <meta name="theme-color" content="#2f7d57" />
+  <link rel="canonical" href="https://evolead.site/vocabulary.html" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZB2HSNN3H"></script>
+  <script src="analytics.js?v=20260317-1"></script>
+
+  <link rel="stylesheet" href="shared.css?v=20260317-1" />
+  <link rel="stylesheet" href="vocabulary.css?v=20260317-1" />
 </head>
 <body>
-  <a href="index.html" class="back-menu">&larr; back to menu</a>
+  <div class="site-shell">
+    <div class="site-page vocabulary-page">
+      <div class="site-topbar">
+        <a href="index.html" class="site-back-link">&larr; Main Menu</a>
+        <span class="site-badge">Vocabulary Lab</span>
+      </div>
 
-  <main class="page">
-    <section class="panel" aria-labelledby="vocabularyTitle">
-      <header class="panel-header">
-        <h1 id="vocabularyTitle">Vocabulary | Elementary</h1>
-        <p>Unit 1-12 vocabulary practice</p>
-      </header>
+      <main class="page">
+        <section class="panel" aria-labelledby="vocabularyTitle">
+          <header class="panel-header">
+            <div class="panel-copy-block">
+              <span class="section-kicker">Unit 1 to 12 Review</span>
+              <h1 id="vocabularyTitle">Vocabulary | Elementary</h1>
+              <p>
+                Search words, filter by unit, track what is already mastered, and use the random practice card
+                to test yourself quickly.
+              </p>
+            </div>
 
-      <section class="toolbar" aria-label="Vocabulary filters">
-        <label class="field">
-          <span>Search</span>
-          <input id="searchInput" type="search" placeholder="Search word or meaning" />
-        </label>
+            <aside class="practice-card" aria-labelledby="practiceCardHeading">
+              <p class="practice-label">Random Practice</p>
+              <h2 id="practiceCardHeading">Quick self-quiz</h2>
+              <p class="practice-prompt" id="practicePrompt">Choose a random word and try to remember it before revealing the answer.</p>
+              <div class="practice-word" id="practiceWord">Ready?</div>
+              <p class="practice-answer" id="practiceAnswer">The answer will appear here.</p>
+              <div class="practice-actions">
+                <button id="nextPracticeWord" class="practice-btn" type="button">Random word</button>
+                <button id="togglePracticeAnswer" class="practice-btn secondary" type="button">Reveal answer</button>
+                <button id="practiceMarkMastered" class="practice-btn secondary" type="button">Mark mastered</button>
+              </div>
+            </aside>
+          </header>
 
-        <label class="field">
-          <span>Unit</span>
-          <select id="unitFilter">
-            <option value="all">All Units</option>
-            <option value="1">Unit 1</option>
-            <option value="2">Unit 2</option>
-            <option value="3">Unit 3</option>
-            <option value="4">Unit 4</option>
-            <option value="5">Unit 5</option>
-            <option value="6">Unit 6</option>
-            <option value="7">Unit 7</option>
-            <option value="8">Unit 8</option>
-            <option value="9">Unit 9</option>
-            <option value="10">Unit 10</option>
-            <option value="11">Unit 11</option>
-            <option value="12">Unit 12</option>
-          </select>
-        </label>
+          <section class="toolbar" aria-label="Vocabulary filters">
+            <label class="field">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="Search word or meaning" />
+            </label>
 
-        <label class="field">
-          <span>Status</span>
-          <select id="statusFilter">
-            <option value="all">All</option>
-            <option value="learning">Need Practice</option>
-            <option value="mastered">Mastered</option>
-          </select>
-        </label>
+            <label class="field">
+              <span>Unit</span>
+              <select id="unitFilter">
+                <option value="all">All Units</option>
+                <option value="1">Unit 1</option>
+                <option value="2">Unit 2</option>
+                <option value="3">Unit 3</option>
+                <option value="4">Unit 4</option>
+                <option value="5">Unit 5</option>
+                <option value="6">Unit 6</option>
+                <option value="7">Unit 7</option>
+                <option value="8">Unit 8</option>
+                <option value="9">Unit 9</option>
+                <option value="10">Unit 10</option>
+                <option value="11">Unit 11</option>
+                <option value="12">Unit 12</option>
+              </select>
+            </label>
 
-        <button id="resetProgress" class="reset-btn" type="button">Reset Progress</button>
-      </section>
+            <label class="field">
+              <span>Status</span>
+              <select id="statusFilter">
+                <option value="all">All</option>
+                <option value="learning">Need Practice</option>
+                <option value="mastered">Mastered</option>
+              </select>
+            </label>
 
-      <section class="stats" aria-label="Progress summary">
-        <article class="stat-card">
-          <h2>Total</h2>
-          <p id="totalCount">0</p>
-        </article>
+            <label class="field">
+              <span>Sort</span>
+              <select id="sortFilter">
+                <option value="unit">By Unit</option>
+                <option value="az">A-Z</option>
+                <option value="za">Z-A</option>
+                <option value="mastered">Mastered First</option>
+              </select>
+            </label>
 
-        <article class="stat-card">
-          <h2>Mastered</h2>
-          <p id="masteredCount">0</p>
-        </article>
+            <button id="resetProgress" class="reset-btn" type="button">Reset Progress</button>
+          </section>
 
-        <article class="stat-card">
-          <h2>Left</h2>
-          <p id="leftCount">0</p>
-        </article>
-      </section>
+          <section class="unit-progress" id="unitProgress" aria-label="Unit progress"></section>
 
-      <p id="listStatus" class="list-status" aria-live="polite"></p>
-      <div id="vocabList" class="vocab-list" aria-live="polite"></div>
-    </section>
-  </main>
+          <section class="stats" aria-label="Progress summary">
+            <article class="stat-card">
+              <h2>Total</h2>
+              <p id="totalCount">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h2>Mastered</h2>
+              <p id="masteredCount">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h2>Left</h2>
+              <p id="leftCount">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h2>Rate</h2>
+              <p id="completionRate">0%</p>
+            </article>
+          </section>
+
+          <p id="listStatus" class="list-status" aria-live="polite"></p>
+          <div id="vocabList" class="vocab-list" aria-live="polite"></div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>Use the unit buttons for focused revision, then try a few random-word checks.</span>
+        <a href="homework.html">Return to the homework page</a>
+      </footer>
+    </div>
+  </div>
 
   <div
     id="resetConfirmModal"
@@ -85,7 +145,7 @@
   >
     <div class="confirm-modal-card">
       <h2 id="resetConfirmTitle">Clear all units?</h2>
-      <p>Are you sure you want to clear progress for all units?</p>
+      <p>Are you sure you want to clear progress for all units? This only affects this browser.</p>
       <div class="confirm-modal-actions">
         <button id="confirmResetNo" class="confirm-btn confirm-no" type="button">No</button>
         <button id="confirmResetYes" class="confirm-btn confirm-yes" type="button">Yes</button>
@@ -93,7 +153,8 @@
     </div>
   </div>
 
+  <script src="shared.js?v=20260317-1"></script>
   <script src="vocabulary-data.js?v=20260304-2"></script>
-  <script src="vocabulary.js?v=20260304-6"></script>
+  <script src="vocabulary.js?v=20260317-2"></script>
 </body>
 </html>

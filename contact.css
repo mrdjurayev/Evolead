@@ -1,210 +1,170 @@
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+.contact-layout {
+  display: grid;
+  gap: 18px;
 }
 
-:root {
-  --radius: 14px;
-  --text: #0f172a;
-  --muted: #475569;
-  --bg1: #f8fafc;
-  --bg2: #ffffff;
-  --card: rgba(255, 255, 255, 0.92);
-  --border: rgba(15, 23, 42, 0.10);
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.86fr) minmax(0, 1.14fr);
+  gap: 18px;
 }
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color: var(--text);
-  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+.contact-info {
+  display: grid;
+  gap: 18px;
 }
 
-.contact-page {
-  min-height: 100vh;
+.contact-form-card {
+  display: grid;
+  gap: 16px;
+}
+
+.contact-form-head {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.contact-wrapper {
-  width: 100%;
-  max-width: 560px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--card);
-  box-shadow: var(--shadow);
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 0 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  background: rgba(15, 23, 42, 0.03);
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 13px;
-  transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
-}
-
-.back-link:hover {
-  background: rgba(15, 23, 42, 0.06);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
-}
-
-.contact-title {
-  margin: 20px 0 0;
-  font-size: 30px;
-  line-height: 1.1;
+.contact-form-head h2 {
+  margin: 0;
+  font-size: 1.14rem;
+  font-weight: 800;
 }
 
 .contact-text {
-  margin: 8px 0 14px;
-  font-size: 15px;
+  margin: 6px 0 0;
   color: var(--muted);
+  line-height: 1.68;
 }
 
 .contact-form {
+  display: grid;
+  gap: 14px;
+}
+
+.contact-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.contact-field {
   display: grid;
   gap: 8px;
 }
 
 .contact-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 800;
 }
 
 .contact-input,
 .contact-textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
   background: #ffffff;
   color: var(--text);
-  font: inherit;
+  padding: 13px 15px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .contact-input:focus,
 .contact-textarea:focus {
   outline: none;
-  border-color: rgba(15, 23, 42, 0.28);
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.10);
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .contact-textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 180px;
+  line-height: 1.65;
 }
 
-.contact-submit {
-  min-height: 44px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.03);
-  color: var(--text);
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.contact-submit:hover {
-  background: rgba(15, 23, 42, 0.06);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
-}
-
-.contact-submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.contact-status {
-  min-height: 20px;
-  margin: 10px 0 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.contact-status.is-success {
-  color: #166534;
-}
-
-.contact-status.is-error {
-  color: #b91c1c;
-}
-
+.contact-submit,
 .contact-mailto {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  margin-top: 8px;
-  padding: 0 14px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.03);
-  color: var(--text);
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
   text-decoration: none;
-  font-weight: 700;
-  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  font-weight: 800;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
+.contact-submit {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(37, 103, 72, 0.16);
+  cursor: pointer;
+}
+
+.contact-mailto {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+}
+
+.contact-submit:hover,
 .contact-mailto:hover {
-  background: rgba(15, 23, 42, 0.06);
   transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
 }
 
-@media (max-width: 480px) {
-  .contact-page {
-    padding: 10px;
-  }
+.contact-submit:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
 
-  .contact-wrapper {
-    padding: 12px;
-    border-radius: 14px;
-  }
+.contact-status {
+  min-height: 22px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
 
-  .contact-title {
-    font-size: 26px;
-  }
+.contact-status.is-success {
+  color: var(--success);
+}
 
-  .contact-text {
-    margin-bottom: 12px;
-    font-size: 14px;
-  }
+.contact-status.is-error {
+  color: var(--danger);
+}
 
-  .contact-mailto {
+@media (max-width: 920px) {
+  .contact-grid,
+  .contact-field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-actions > * {
     width: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .back-link,
   .contact-submit,
   .contact-mailto {
     transition: none;
   }
 
-  .back-link:hover,
   .contact-submit:hover,
   .contact-mailto:hover {
     transform: none;
   }
-}
-
-a:active,
-button:active {
-  background: inherit;
 }
