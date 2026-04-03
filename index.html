@@ -1,211 +1,609 @@
 <!doctype html>
-<html lang="en">
+<html lang="uz">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evolead | Personal Development Hub</title>
-  <meta
-    name="description"
-    content="A lightweight English learning hub with homework tracking, vocabulary practice, news discussion, and contact support."
-  />
-  <meta name="theme-color" content="#2f7d57" />
-  <link rel="canonical" href="https://evolead.site/" />
+  <title>Lesson schedule</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: #ffffff;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #dbe3f0;
+      --header-bg: #fafafa;
+      --time-bg: #ffffff;
+      --blue: #1a73e8;
+      --time-width: 88px;
+      --day-width: minmax(150px, 1fr);
+      --slot-height: 64px;
+      --half-slot-height: calc(var(--slot-height) / 2);
+    }
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZB2HSNN3H"></script>
-  <script src="analytics.js?v=20260317-1"></script>
+    * {
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="shared.css?v=20260317-1" />
-  <link rel="stylesheet" href="styles.css?v=20260317-1" />
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--page-bg);
+    }
+
+    .page {
+      width: min(1220px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 20px 0 28px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-radius: 12px;
+      background: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .header-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.375rem, 2.5vw, 1.875rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+    }
+
+    .roadmap-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .roadmap-link svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+      color: var(--muted);
+    }
+
+    .roadmap-link i {
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .roadmap-link i svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    .schedule-shell {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .calendar-scroll {
+      overflow-x: auto;
+      background: #ffffff;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: var(--time-width) repeat(7, var(--day-width));
+      grid-template-rows: 56px repeat(34, var(--half-slot-height));
+      min-width: 1120px;
+      position: relative;
+    }
+
+    .corner,
+    .day-header,
+    .time-cell {
+      position: relative;
+      z-index: 1;
+      min-height: var(--slot-height);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .corner {
+      min-height: 56px;
+      background: var(--header-bg);
+    }
+
+    .day-header {
+      min-height: 56px;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+      background: var(--header-bg);
+      text-align: center;
+    }
+
+    .day-header strong {
+      font-size: 0.96rem;
+      font-weight: 800;
+    }
+
+    .time-cell {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 10px 10px 0 8px;
+      background: var(--time-bg);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .slot-cell {
+      position: relative;
+      z-index: 1;
+      min-height: var(--half-slot-height);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .schedule-event {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-self: stretch;
+      justify-self: stretch;
+      gap: 4px;
+      margin: 0;
+      padding: 10px 12px;
+      border: 0;
+      border-left: 4px solid #0278ad;
+      background: #0399de;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .schedule-event--royal {
+      border-left-color: #1d4ed8;
+      background: #2664eb;
+    }
+
+    .schedule-event--cyan {
+      border-left-color: #0f8fc9;
+      background: #21aded;
+    }
+
+    .schedule-event strong {
+      font-size: 0.92rem;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .schedule-event span {
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.92);
+      font-weight: 600;
+    }
+
+    .current-time-indicator {
+      position: absolute;
+      z-index: 3;
+      height: 0;
+      pointer-events: none;
+    }
+
+    .current-time-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 3px;
+      background: #dc2626;
+    }
+
+    .day-header--end {
+      border-right: 0;
+    }
+
+    .slot-cell--last,
+    .time-cell--last {
+      border-bottom: 0;
+    }
+
+    .slot-cell--end,
+    .time-cell--end {
+      border-right: 0;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        width: min(100%, calc(100% - 20px));
+        padding-top: 16px;
+      }
+
+      .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-actions {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 </head>
 <body>
-  <main class="site-shell">
-    <div class="site-page landing-page">
-      <section class="hero-card page-hero" aria-labelledby="homeTitle">
-        <div class="hero-copy">
-          <span class="section-kicker">Evolead Learning Hub</span>
-
-          <div class="title-row">
-            <span class="title-icon" aria-hidden="true">🧭</span>
-            <h1 class="section-title title" id="homeTitle">Study smarter. Practice every day.</h1>
-          </div>
-
-          <p class="hero-subtitle section-copy">
-            Evolead brings your daily homework, vocabulary revision, article practice, and support links
-            into one calm space so the next step is always obvious.
-          </p>
-
-          <div class="hero-pills inline-pills" aria-label="Highlights">
-            <div class="metric-pill">
-              <strong>Homework flow</strong>
-              <span>Track lesson tasks with saved progress</span>
-            </div>
-            <div class="metric-pill">
-              <strong>12 units</strong>
-              <span>Vocabulary practice with filters and stats</span>
-            </div>
-            <div class="metric-pill">
-              <strong>Fresh content</strong>
-              <span>News, listening, and writing tools updated often</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="menu-wrapper" aria-labelledby="menuTitle">
-        <div class="menu-heading">
-          <span class="section-kicker">Main Menu</span>
-          <h2 class="menu-title" id="menuTitle">Choose the part you want to work on next.</h2>
-        </div>
-
-        <div class="grid">
-          <a class="card" href="homework.html">
-            <span class="icon" aria-hidden="true">📝</span>
-            <span class="label">Homework</span>
-            <span class="description">Open the latest checklist and save your progress.</span>
-          </a>
-
-          <a
-            class="card"
-            id="translatorCard"
-            href="https://chatgpt.com/g/g-699b5a8f59a88191a59bd0da75b106e1-translator"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <span class="icon" aria-hidden="true">🌍</span>
-            <span class="label">Translator</span>
-            <span class="description">Choose English-only or bilingual translation support.</span>
-          </a>
-
-          <a
-            class="card"
-            id="grammarCard"
-            href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <span class="icon" aria-hidden="true">✅</span>
-            <span class="label">Grammar Fixer</span>
-            <span class="description">Improve writing with focused grammar correction modes.</span>
-          </a>
-
-          <a class="card" href="vocabulary.html">
-            <span class="icon" aria-hidden="true">📚</span>
-            <span class="label">Vocabulary</span>
-            <span class="description">Search, filter, and mark words as mastered.</span>
-          </a>
-
-          <a class="card" href="news.html">
-            <span class="icon" aria-hidden="true">📰</span>
-            <span class="label">News</span>
-            <span class="description">Read, watch, and discuss current practice topics.</span>
-          </a>
-
-          <a class="card" href="about.html">
-            <span class="icon" aria-hidden="true">ℹ️</span>
-            <span class="label">About</span>
-            <span class="description">See how Evolead is structured and how to use it best.</span>
-          </a>
-        </div>
-
-        <section class="contact-cta surface-card" aria-label="Contact page shortcut">
-          <div>
-            <p class="contact-cta-text">Need a suggestion, a correction, or a new practice idea?</p>
-            <h2 class="contact-cta-title">Reach out and keep the learning flow moving.</h2>
-          </div>
-
-          <a class="site-button contact-cta-button" href="contact.html">Contact Us</a>
-        </section>
-      </section>
-
-      <footer class="site-footer">
-        <span>Built for daily English practice with less friction.</span>
-        <a href="about.html">Learn how the hub works</a>
-      </footer>
+  <main class="page">
+    <div class="page-header">
+      <h1>Lesson schedule</h1>
+      <div class="header-actions">
+        <a class="roadmap-link" href="#" id="currentLessonButton">
+          <i data-lucide="radio" aria-hidden="true"></i>
+          <span>Current lesson</span>
+        </a>
+        <a class="roadmap-link" href="roadmap.html">
+          <i data-lucide="map" aria-hidden="true"></i>
+          <span>Roadmap</span>
+        </a>
+      </div>
     </div>
+
+    <section class="schedule-shell" aria-label="Weekly lesson calendar">
+      <div class="calendar-scroll">
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+    </section>
   </main>
 
-  <div class="modal" id="grammarModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="true"></div>
+  <script src="https://unpkg.com/lucide@0.563.0/dist/umd/lucide.min.js"></script>
+  <script>
+    (function () {
+      const calendarGrid = document.getElementById("calendarGrid");
+      const calendarScroll = document.querySelector(".calendar-scroll");
+      const currentLessonButton = document.getElementById("currentLessonButton");
+      if (!calendarGrid) return;
 
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="grammarModalTitle">
-      <div class="modal-header">
-        <h2 class="modal-title" id="grammarModalTitle">Choose Grammar Mode</h2>
-        <button class="modal-close" type="button" aria-label="Close" data-close="true">✕</button>
-      </div>
+      const DAYS = [
+        { key: "Mon", label: "Monday", column: 2 },
+        { key: "Tue", label: "Tuesday", column: 3 },
+        { key: "Wed", label: "Wednesday", column: 4 },
+        { key: "Thu", label: "Thursday", column: 5 },
+        { key: "Fri", label: "Friday", column: 6 },
+        { key: "Sat", label: "Saturday", column: 7 },
+        { key: "Sun", label: "Sunday", column: 8 },
+      ];
+      const DAY_BY_KEY = Object.fromEntries(DAYS.map((day) => [day.key, day]));
+      const LAST_DAY_INDEX = DAYS.length - 1;
+      const START_HOUR = 6;
+      const LAST_VISIBLE_HOUR = 22;
+      const TIMELINE_END_HOUR = LAST_VISIBLE_HOUR + 1;
+      const SUBJECT_STYLES = {
+        royal: "schedule-event--royal",
+        cyan: "schedule-event--cyan",
+      };
+      const SCHEDULE = [
+        {
+          title: "Grammar",
+          style: "royal",
+          sessions: [
+            ["Tue", "08:00", "09:30"],
+            ["Thu", "08:00", "09:30"],
+            ["Thu", "15:30", "17:00"],
+            ["Sat", "08:00", "09:30"],
+            ["Sun", "10:00", "11:30"],
+          ],
+        },
+        {
+          title: "Computers and the Internet",
+          style: "royal",
+          sessions: [
+            ["Tue", "10:00", "11:30"],
+            ["Wed", "16:00", "17:30"],
+            ["Thu", "13:30", "15:00"],
+            ["Fri", "15:30", "17:00"],
+            ["Sat", "13:30", "15:00"],
+            ["Sun", "15:30", "17:00"],
+          ],
+        },
+        {
+          title: "Early math review",
+          style: "royal",
+          sessions: [
+            ["Mon", "14:00", "15:30"],
+            ["Tue", "15:30", "17:00"],
+            ["Wed", "14:00", "15:30"],
+            ["Thu", "10:00", "11:30"],
+            ["Sat", "10:00", "11:30"],
+            ["Sun", "13:30", "15:00"],
+          ],
+        },
+        {
+          title: "OER Project: Big History",
+          style: "royal",
+          sessions: [
+            ["Mon", "16:00", "17:30"],
+            ["Tue", "13:30", "15:00"],
+            ["Sat", "15:30", "17:00"],
+          ],
+        },
+        {
+          title: "Cambridge student app",
+          style: "cyan",
+          sessions: DAYS.map((day) => [day.key, "18:30", "20:00"]),
+        },
+        {
+          title: "English at Cambridge",
+          style: "cyan",
+          sessions: [
+            ["Mon", "10:30", "12:00"],
+            ["Wed", "10:30", "12:00"],
+            ["Fri", "10:30", "12:00"],
+          ],
+        },
+      ];
+      const timeFormatter = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Tashkent",
+        weekday: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
 
-      <div class="modal-body">
-        <a
-          class="modal-option"
-          href="https://chatgpt.com/g/g-699b5ffb4f2c8191be5ad1069fcaf15c-grammar-fixer"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          English Only
-        </a>
+      function createTextElement(tagName, textContent) {
+        const element = document.createElement(tagName);
+        element.textContent = textContent;
+        return element;
+      }
 
-        <a
-          class="modal-option"
-          href="https://chatgpt.com/g/g-699ec24d2238819191fd2f5b3b6c678d-grammar-fixer-uz"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          English-Uzbek
-        </a>
+      function parseTime(value) {
+        const [hourText, minuteText] = value.split(":");
+        const hour = Number(hourText);
+        const minute = Number(minuteText);
+        return {
+          hour,
+          minute,
+          totalMinutes: hour * 60 + minute,
+        };
+      }
 
-        <a
-          class="modal-option"
-          href="https://chatgpt.com/g/g-699ec1c475d48191a40b3e291eecd3fd-grammar-fixer-ru"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          English-Russian
-        </a>
-      </div>
-    </div>
-  </div>
+      function toGridRow(totalMinutes) {
+        const minutesFromStart = totalMinutes - START_HOUR * 60;
+        return minutesFromStart / 30 + 2;
+      }
 
-  <div class="modal" id="translatorModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="true"></div>
+      function formatTime(totalMinutes) {
+        const hour = Math.floor(totalMinutes / 60);
+        const minute = totalMinutes % 60;
+        return String(hour).padStart(2, "0") + ":" + String(minute).padStart(2, "0");
+      }
 
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="translatorModalTitle">
-      <div class="modal-header">
-        <h2 class="modal-title" id="translatorModalTitle">Choose Translation Type</h2>
-        <button class="modal-close" type="button" aria-label="Close" data-close="true">✕</button>
-      </div>
+      function createHeaderCells() {
+        const corner = document.createElement("div");
+        corner.className = "corner";
+        corner.setAttribute("aria-hidden", "true");
+        calendarGrid.appendChild(corner);
 
-      <div class="modal-body">
-        <a
-          class="modal-option"
-          href="https://chatgpt.com/g/g-699b5a8f59a88191a59bd0da75b106e1-translator"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          English Only
-        </a>
+        DAYS.forEach((day, index) => {
+          const dayHeader = document.createElement("div");
+          dayHeader.className = "day-header";
+          if (index === LAST_DAY_INDEX) {
+            dayHeader.classList.add("day-header--end");
+          }
 
-        <a
-          class="modal-option"
-          href="https://chatgpt.com/g/g-699ec32d060081918036a9f1ee482f1f-translator-uz"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          English - Uzbek
-        </a>
+          dayHeader.appendChild(createTextElement("strong", day.label));
+          calendarGrid.appendChild(dayHeader);
+        });
+      }
 
-        <a
-          class="modal-option"
-          href="https://chatgpt.com/g/g-699ec54f85b881918e12ed9ef067d8b2-translator-ru"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          English - Russian
-        </a>
-      </div>
-    </div>
-  </div>
+      function expandLessons(schedule) {
+        return schedule.flatMap((item) =>
+          item.sessions.map(([day, start, end]) => ({
+            title: item.title,
+            className: SUBJECT_STYLES[item.style] || "",
+            dayColumn: DAY_BY_KEY[day]?.column || 0,
+            start: parseTime(start),
+            end: parseTime(end),
+          }))
+        );
+      }
 
-  <script src="shared.js?v=20260317-1"></script>
-  <script src="index.js?v=20260317-2"></script>
+      function createTimeCell(hour) {
+        const rowIndex = (hour - START_HOUR) * 2 + 2;
+        const timeCell = document.createElement("div");
+
+        timeCell.className = "time-cell";
+        timeCell.style.gridColumn = "1 / 2";
+        timeCell.style.gridRow = String(rowIndex) + " / span 2";
+        timeCell.textContent = formatTime(hour * 60);
+
+        if (hour === LAST_VISIBLE_HOUR) {
+          timeCell.classList.add("time-cell--last");
+        }
+
+        return timeCell;
+      }
+
+      function createSlotCell(dayIndex, rowIndex, isLastRow) {
+        const slotCell = document.createElement("div");
+
+        slotCell.className = "slot-cell";
+        slotCell.style.gridColumn = String(dayIndex + 2) + " / " + String(dayIndex + 3);
+        slotCell.style.gridRow = String(rowIndex) + " / " + String(rowIndex + 1);
+
+        if (dayIndex === LAST_DAY_INDEX) {
+          slotCell.classList.add("slot-cell--end");
+        }
+
+        if (isLastRow) {
+          slotCell.classList.add("slot-cell--last");
+        }
+
+        return slotCell;
+      }
+
+      function createEventCard(lesson) {
+        const eventCard = document.createElement("article");
+        const title = createTextElement("strong", lesson.title);
+        const time = createTextElement(
+          "span",
+          formatTime(lesson.start.totalMinutes) + " - " + formatTime(lesson.end.totalMinutes)
+        );
+
+        eventCard.className = "schedule-event";
+        if (lesson.className) {
+          eventCard.classList.add(lesson.className);
+        }
+
+        eventCard.style.gridColumn = String(lesson.dayColumn) + " / " + String(lesson.dayColumn + 1);
+        eventCard.style.gridRow =
+          String(toGridRow(lesson.start.totalMinutes)) +
+          " / " +
+          String(toGridRow(lesson.end.totalMinutes));
+        eventCard.append(title, time);
+
+        return eventCard;
+      }
+
+      function buildCalendarGrid() {
+        createHeaderCells();
+
+        for (let hour = START_HOUR; hour <= LAST_VISIBLE_HOUR; hour += 1) {
+          const baseRowIndex = (hour - START_HOUR) * 2 + 2;
+          calendarGrid.appendChild(createTimeCell(hour));
+
+          for (let half = 0; half < 2; half += 1) {
+            const rowIndex = baseRowIndex + half;
+            const isLastRow = hour === LAST_VISIBLE_HOUR && half === 1;
+
+            for (let dayIndex = 0; dayIndex < DAYS.length; dayIndex += 1) {
+              calendarGrid.appendChild(createSlotCell(dayIndex, rowIndex, isLastRow));
+            }
+          }
+        }
+      }
+
+      function buildLessons() {
+        expandLessons(SCHEDULE).forEach((lesson) => {
+          calendarGrid.appendChild(createEventCard(lesson));
+        });
+      }
+
+      buildCalendarGrid();
+      buildLessons();
+
+      const timeIndicator = document.createElement("div");
+      const timeIndicatorLine = document.createElement("div");
+
+      timeIndicator.className = "current-time-indicator";
+      timeIndicatorLine.className = "current-time-line";
+      timeIndicatorLine.setAttribute("aria-hidden", "true");
+      timeIndicator.appendChild(timeIndicatorLine);
+      calendarGrid.appendChild(timeIndicator);
+
+      function getTashkentDateParts() {
+        const parts = timeFormatter.formatToParts(new Date());
+        const weekday = parts.find((part) => part.type === "weekday")?.value || "Mon";
+        const hour = Number(parts.find((part) => part.type === "hour")?.value || "0");
+        const minute = Number(parts.find((part) => part.type === "minute")?.value || "0");
+        const second = Number(parts.find((part) => part.type === "second")?.value || "0");
+        return { weekday, hour, minute, second };
+      }
+
+      function getDayHeader(dayColumn) {
+        const dayHeaders = calendarGrid.querySelectorAll(".day-header");
+        return dayHeaders[dayColumn - 2] || null;
+      }
+
+      function updateCurrentTimeIndicator() {
+        const { weekday, hour, minute, second } = getTashkentDateParts();
+        const currentDayColumn = DAY_BY_KEY[weekday]?.column || 0;
+        const currentMinutes = hour * 60 + minute + second / 60;
+        const startMinutes = START_HOUR * 60;
+        const endMinutes = TIMELINE_END_HOUR * 60;
+        const dayHeader = getDayHeader(currentDayColumn);
+        const firstTimeCell = calendarGrid.querySelector(".time-cell");
+
+        if (!dayHeader || !firstTimeCell) {
+          timeIndicator.style.display = "none";
+          return;
+        }
+
+        const headerHeight = dayHeader.offsetHeight;
+        const hourHeight = firstTimeCell.offsetHeight;
+        const clampedMinutes = Math.min(Math.max(currentMinutes, startMinutes), endMinutes);
+        const minutesFromStart = clampedMinutes - startMinutes;
+        const top = headerHeight + (minutesFromStart / 60) * hourHeight;
+
+        timeIndicator.style.display = "block";
+        timeIndicator.style.left = dayHeader.offsetLeft + "px";
+        timeIndicator.style.top = top + "px";
+        timeIndicator.style.width = dayHeader.offsetWidth + "px";
+      }
+
+      function focusCurrentTimeline() {
+        const { weekday } = getTashkentDateParts();
+        const currentDayColumn = DAY_BY_KEY[weekday]?.column || 0;
+        const dayHeader = getDayHeader(currentDayColumn);
+
+        updateCurrentTimeIndicator();
+
+        if (calendarScroll && dayHeader) {
+          const targetLeft =
+            dayHeader.offsetLeft - calendarScroll.clientWidth / 2 + dayHeader.offsetWidth / 2;
+
+          calendarScroll.scrollTo({
+            left: Math.max(0, targetLeft),
+            behavior: "smooth",
+          });
+        }
+
+        timeIndicator.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
+      }
+
+      if (currentLessonButton) {
+        currentLessonButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          focusCurrentTimeline();
+        });
+      }
+
+      updateCurrentTimeIndicator();
+      window.setInterval(updateCurrentTimeIndicator, 1000);
+      window.addEventListener("resize", updateCurrentTimeIndicator);
+    })();
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

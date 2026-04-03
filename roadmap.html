@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roadmap</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #dbe3f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--page-bg);
+    }
+
+    .page {
+      width: min(1220px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 20px 0 28px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .header-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.375rem, 2.5vw, 1.875rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+    }
+
+    .select-wrap {
+      position: relative;
+      min-width: 164px;
+    }
+
+    .select-trigger,
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .select-trigger {
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .select-trigger:focus {
+      border-color: var(--muted);
+    }
+
+    .select-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--muted);
+      flex: 0 0 auto;
+      transition: transform 0.16s ease;
+    }
+
+    .select-wrap.is-open .select-icon {
+      transform: rotate(180deg);
+    }
+
+    .select-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      display: none;
+      padding: 6px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      z-index: 10;
+    }
+
+    .select-wrap.is-open .select-menu {
+      display: grid;
+      gap: 2px;
+    }
+
+    .select-option {
+      min-height: 34px;
+      padding: 0 10px;
+      border: 0;
+      background: #ffffff;
+      color: var(--text);
+      text-align: left;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .select-option:hover {
+      background: #fafafa;
+    }
+
+    .select-option.is-selected {
+      font-weight: 600;
+    }
+
+    .back-link svg {
+      width: 13px;
+      height: 13px;
+      display: block;
+      color: var(--muted);
+      stroke-width: 2;
+      flex: 0 0 auto;
+    }
+
+    .subject-panel {
+      margin-top: 20px;
+    }
+
+    .phase-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .phase {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 20px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .phase:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .phase-label {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .phase-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .phase-kicker::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .phase-kicker--foundation {
+      color: #2563eb;
+    }
+
+    .phase-kicker--comprehension {
+      color: #16a34a;
+    }
+
+    .phase-kicker--depth {
+      color: #ca8a04;
+    }
+
+    .phase-kicker--advanced {
+      color: #ea580c;
+    }
+
+    .phase-kicker--polish {
+      color: #dc2626;
+    }
+
+    .phase-track {
+      position: relative;
+      display: grid;
+      gap: 12px;
+      padding-left: 26px;
+    }
+
+    .phase-track::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .phase-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .phase-item::before {
+      content: "";
+      position: absolute;
+      left: -23px;
+      top: 18px;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #ffffff;
+      border-radius: 999px;
+      background: var(--dot-color, #9ca3af);
+      box-sizing: border-box;
+    }
+
+    .phase-item--foundation {
+      --dot-color: #2563eb;
+    }
+
+    .phase-item--comprehension {
+      --dot-color: #16a34a;
+    }
+
+    .phase-item--depth {
+      --dot-color: #ca8a04;
+    }
+
+    .phase-item--advanced {
+      --dot-color: #ea580c;
+    }
+
+    .phase-item--polish {
+      --dot-color: #dc2626;
+    }
+
+    .phase-link {
+      flex: 1 1 auto;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .phase-link:hover strong {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .phase-item strong {
+      display: block;
+      font-size: 0.96rem;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .phase-item:hover {
+      background: #fafafa;
+    }
+
+    .phase-check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .phase-check input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+      accent-color: var(--dot-color, #2563eb);
+    }
+
+    .phase-item.is-complete strong {
+      color: var(--muted);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        width: min(100%, calc(100% - 20px));
+        padding-top: 16px;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-actions {
+        flex-wrap: wrap;
+      }
+
+      .phase {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="page-header">
+      <h1>Roadmap</h1>
+
+      <div class="header-actions">
+        <div class="select-wrap" id="languageDropdown">
+          <button class="select-trigger" id="subjectTrigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span id="selectedLanguage">English</span>
+            <svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+
+          <div class="select-menu" id="subjectMenu" role="listbox" aria-label="Subject selector"></div>
+        </div>
+
+        <a class="back-link" href="index.html">
+          <i data-lucide="arrow-left" aria-hidden="true"></i>
+          <span>Back</span>
+        </a>
+      </div>
+    </div>
+
+    <section class="subject-panel" id="subjectPanel"></section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.563.0/dist/umd/lucide.min.js"></script>
+  <script>
+    (function () {
+      const DEFAULT_SUBJECT = "English";
+      const storageKeys = {
+        subject: "roadmap-selected-subject",
+        progressPrefix: "roadmap-progress:",
+      };
+      const dropdown = document.getElementById("languageDropdown");
+      const trigger = document.getElementById("subjectTrigger");
+      const label = document.getElementById("selectedLanguage");
+      const menu = document.getElementById("subjectMenu");
+      const panel = document.getElementById("subjectPanel");
+      if (!dropdown || !trigger || !label || !menu || !panel) return;
+
+      const SUBJECTS = {
+        English: {
+          phases: [
+            {
+              tone: "foundation",
+              label: "Foundation",
+              items: [
+                {
+                  title: "Grammar",
+                  href: "https://www.khanacademy.org/humanities/grammar",
+                  key: "english-grammar",
+                },
+              ],
+            },
+            {
+              tone: "comprehension",
+              label: "Comprehension",
+              items: [
+                {
+                  title: "2nd grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/cc-2nd-reading-vocab",
+                  key: "english-2nd-grade-reading-vocabulary",
+                },
+                {
+                  title: "3rd grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/cc-3rd-reading-vocab",
+                  key: "english-3rd-grade-reading-vocabulary",
+                },
+                {
+                  title: "4th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/4th-grade-reading-and-vocab",
+                  key: "english-4th-grade-reading-vocabulary",
+                },
+                {
+                  title: "5th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/5th-grade-reading-and-vocab",
+                  key: "english-5th-grade-reading-vocabulary",
+                },
+                {
+                  title: "6th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/new-6th-grade-reading-and-vocabulary",
+                  key: "english-6th-grade-reading-vocabulary",
+                },
+              ],
+            },
+            {
+              tone: "depth",
+              label: "Academic depth",
+              items: [
+                {
+                  title: "7th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/7th-grade-reading-and-vocabulary",
+                  key: "english-7th-grade-reading-vocabulary",
+                },
+                {
+                  title: "8th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/8th-grade-reading-and-vocabulary",
+                  key: "english-8th-grade-reading-vocabulary",
+                },
+                {
+                  title: "9th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/9th-grade-reading-and-vocabulary",
+                  key: "english-9th-grade-reading-vocabulary",
+                },
+                {
+                  title: "10th grade reading and vocabulary",
+                  href: "https://www.khanacademy.org/ela/10th-grade-reading-and-vocabulary",
+                  key: "english-10th-grade-reading-vocabulary",
+                },
+              ],
+            },
+          ],
+        },
+        Programming: {
+          phases: [
+            {
+              tone: "foundation",
+              label: "System & network",
+              items: [
+                {
+                  title: "Computers and the Internet",
+                  href: "https://www.khanacademy.org/computing/computers-and-internet",
+                  key: "programming-computers-and-the-internet",
+                },
+                {
+                  title: "Grade 9 Computer Science - Pakistan National Curriculum",
+                  href: "https://www.khanacademy.org/computing/grade-9-computer-science-pakistan-national-curriculum",
+                  key: "programming-grade-9-computer-science-pakistan-national-curriculum",
+                },
+                {
+                  title: "Code.org",
+                  href: "https://www.khanacademy.org/computing/code-org",
+                  key: "programming-code-org",
+                },
+              ],
+            },
+            {
+              tone: "comprehension",
+              label: "Algorithmic logic",
+              items: [
+                {
+                  title: "Computational Thinking",
+                  href: "https://www.khanacademy.org/computing/tesda-computational-thinking",
+                  key: "programming-computational-thinking",
+                },
+                {
+                  title: "Computer science theory",
+                  href: "https://www.khanacademy.org/computing/computer-science",
+                  key: "programming-computer-science-theory",
+                },
+              ],
+            },
+            {
+              tone: "depth",
+              label: "Backend core",
+              items: [
+                {
+                  title: "Intro to computer science - Python",
+                  href: "https://www.khanacademy.org/computing/intro-to-python-fundamentals",
+                  key: "programming-intro-to-computer-science-python",
+                },
+                {
+                  title: "Computer programming",
+                  href: "https://www.khanacademy.org/computing/computer-programming",
+                  key: "programming-computer-programming",
+                },
+              ],
+            },
+            {
+              tone: "polish",
+              label: "Academic polish",
+              items: [
+                {
+                  title: "AP®︎/College Computer Science Principles",
+                  href: "https://www.khanacademy.org/computing/ap-computer-science-principles",
+                  key: "programming-ap-college-computer-science-principles",
+                },
+                {
+                  title: "CS50's Introduction to Computer Science (Harvard)",
+                  href: "https://learning.edx.org/course/course-v1:HarvardX+CS50+X/block-v1:HarvardX+CS50+X+type@sequential+block@29d1ebec17b64a3395c4750ae40506f6/block-v1:HarvardX+CS50+X+type@vertical+block@f1427a8e71704e7b85b12e3fae54e87e",
+                  key: "programming-cs50-introduction-to-computer-science-harvard",
+                },
+              ],
+            },
+          ],
+        },
+        Math: {
+          phases: [
+            {
+              tone: "foundation",
+              label: "Elementary foundation",
+              items: [
+                {
+                  title: "Early math review",
+                  href: "https://www.khanacademy.org/math/early-math",
+                  key: "math-early-math-review",
+                },
+                {
+                  title: "Kindergarten math",
+                  href: "https://www.khanacademy.org/math/cc-kindergarten-math",
+                  key: "math-kindergarten-math",
+                },
+                {
+                  title: "1st grade math",
+                  href: "https://www.khanacademy.org/math/cc-1st-grade-math",
+                  key: "math-1st-grade-math",
+                },
+                {
+                  title: "2nd grade math",
+                  href: "https://www.khanacademy.org/math/cc-2nd-grade-math",
+                  key: "math-2nd-grade-math",
+                },
+                {
+                  title: "3rd grade math",
+                  href: "https://www.khanacademy.org/math/cc-third-grade-math",
+                  key: "math-3rd-grade-math",
+                },
+                {
+                  title: "4th grade math",
+                  href: "https://www.khanacademy.org/math/cc-fourth-grade-math",
+                  key: "math-4th-grade-math",
+                },
+                {
+                  title: "5th grade math",
+                  href: "https://www.khanacademy.org/math/cc-fifth-grade-math",
+                  key: "math-5th-grade-math",
+                },
+                {
+                  title: "Arithmetic",
+                  href: "https://www.khanacademy.org/math/arithmetic",
+                  key: "math-arithmetic",
+                },
+              ],
+            },
+            {
+              tone: "comprehension",
+              label: "Middle school & pre-algebra",
+              items: [
+                {
+                  title: "6th grade math",
+                  href: "https://www.khanacademy.org/math/cc-sixth-grade-math",
+                  key: "math-6th-grade-math",
+                },
+                {
+                  title: "7th grade math",
+                  href: "https://www.khanacademy.org/math/cc-seventh-grade-math",
+                  key: "math-7th-grade-math",
+                },
+                {
+                  title: "8th grade math",
+                  href: "https://www.khanacademy.org/math/cc-eighth-grade-math",
+                  key: "math-8th-grade-math",
+                },
+                {
+                  title: "Pre-algebra",
+                  href: "https://www.khanacademy.org/math/pre-algebra",
+                  key: "math-pre-algebra",
+                },
+                {
+                  title: "Basic geometry and measurement",
+                  href: "https://www.khanacademy.org/math/basic-geo",
+                  key: "math-basic-geometry-and-measurement",
+                },
+              ],
+            },
+            {
+              tone: "depth",
+              label: "Core algebra & geometry",
+              items: [
+                {
+                  title: "Algebra 1",
+                  href: "https://www.khanacademy.org/math/algebra",
+                  key: "math-algebra-1",
+                },
+                {
+                  title: "High school geometry",
+                  href: "https://www.khanacademy.org/math/geometry",
+                  key: "math-high-school-geometry",
+                },
+                {
+                  title: "Algebra 2",
+                  href: "https://www.khanacademy.org/math/algebra2",
+                  key: "math-algebra-2",
+                },
+              ],
+            },
+            {
+              tone: "advanced",
+              label: "Advanced mathematics",
+              items: [
+                {
+                  title: "Trigonometry",
+                  href: "https://www.khanacademy.org/math/trigonometry",
+                  key: "math-trigonometry",
+                },
+                {
+                  title: "Precalculus",
+                  href: "https://www.khanacademy.org/math/precalculus",
+                  key: "math-precalculus",
+                },
+                {
+                  title: "High school statistics",
+                  href: "https://www.khanacademy.org/math/probability",
+                  key: "math-high-school-statistics",
+                },
+                {
+                  title: "Statistics and probability",
+                  href: "https://www.khanacademy.org/math/statistics-probability",
+                  key: "math-statistics-and-probability",
+                },
+              ],
+            },
+            {
+              tone: "polish",
+              label: "University level (AI core)",
+              items: [
+                {
+                  title: "Linear algebra",
+                  href: "https://www.khanacademy.org/math/linear-algebra",
+                  key: "math-linear-algebra",
+                },
+                {
+                  title: "AP®︎/College Calculus AB",
+                  href: "https://www.khanacademy.org/math/ap-calculus-ab",
+                  key: "math-ap-college-calculus-ab",
+                },
+                {
+                  title: "AP®︎/College Calculus BC",
+                  href: "https://www.khanacademy.org/math/ap-calculus-bc",
+                  key: "math-ap-college-calculus-bc",
+                },
+                {
+                  title: "Multivariable calculus",
+                  href: "https://www.khanacademy.org/math/multivariable-calculus",
+                  key: "math-multivariable-calculus",
+                },
+                {
+                  title: "Differential equations",
+                  href: "https://www.khanacademy.org/math/differential-equations",
+                  key: "math-differential-equations",
+                },
+              ],
+            },
+          ],
+        },
+        History: {
+          phases: [
+            {
+              tone: "foundation",
+              label: "Global foundations",
+              items: [
+                {
+                  title: "OER Project: Big History",
+                  href: "https://www.khanacademy.org/humanities/oer-project-big-history",
+                  key: "history-oer-project-big-history",
+                },
+                {
+                  title: "OER Project: World History",
+                  href: "https://www.khanacademy.org/humanities/whp-origins",
+                  key: "history-oer-project-world-history",
+                },
+                {
+                  title: "World History",
+                  href: "https://www.khanacademy.org/humanities/world-history",
+                  key: "history-world-history",
+                },
+              ],
+            },
+            {
+              tone: "comprehension",
+              label: "Academic world history",
+              items: [
+                {
+                  title: "OER Project: World History AP®︎",
+                  href: "https://www.khanacademy.org/humanities/world-history-project-ap",
+                  key: "history-oer-project-world-history-ap",
+                },
+                {
+                  title: "World History Project AP Review",
+                  href: "https://www.khanacademy.org/humanities/world-history-project-ap-preview",
+                  key: "history-world-history-project-ap-review",
+                },
+              ],
+            },
+            {
+              tone: "depth",
+              label: "Government & governance",
+              items: [
+                {
+                  title: "Constitution 101",
+                  href: "https://www.khanacademy.org/humanities/constitution-101",
+                  key: "history-constitution-101",
+                },
+                {
+                  title: "US government and civics",
+                  href: "https://www.khanacademy.org/humanities/us-government-and-civics",
+                  key: "history-us-government-and-civics",
+                },
+                {
+                  title: "AP®︎/College US Government and Politics",
+                  href: "https://www.khanacademy.org/humanities/ap-us-government-and-politics",
+                  key: "history-ap-college-us-government-and-politics",
+                },
+              ],
+            },
+            {
+              tone: "advanced",
+              label: "Regional & specialized history",
+              items: [
+                {
+                  title: "US history",
+                  href: "https://www.khanacademy.org/humanities/us-history",
+                  key: "history-us-history",
+                },
+                {
+                  title: "AP®︎/College US History",
+                  href: "https://www.khanacademy.org/humanities/ap-us-history",
+                  key: "history-ap-college-us-history",
+                },
+                {
+                  title: "OER Project: Climate",
+                  href: "https://www.khanacademy.org/humanities/climate-project",
+                  key: "history-oer-project-climate",
+                },
+              ],
+            },
+            {
+              tone: "polish",
+              label: "Art & culture",
+              items: [
+                {
+                  title: "AP®︎/College Art History",
+                  href: "https://www.khanacademy.org/humanities/ap-art-history",
+                  key: "history-ap-college-art-history",
+                },
+                {
+                  title: "Special topics in art history",
+                  href: "https://www.khanacademy.org/humanities/special-topics-art-history",
+                  key: "history-special-topics-in-art-history",
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      function createTextElement(tagName, textContent) {
+        const element = document.createElement(tagName);
+        element.textContent = textContent;
+        return element;
+      }
+
+      function readStorage(key, fallback) {
+        try {
+          const value = window.localStorage.getItem(key);
+          return value === null ? fallback : value;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function writeStorage(key, value) {
+        try {
+          window.localStorage.setItem(key, value);
+        } catch {
+          // Ignore storage errors and keep the UI usable.
+        }
+      }
+
+      function removeStorage(key) {
+        try {
+          window.localStorage.removeItem(key);
+        } catch {
+          // Ignore storage errors and keep the UI usable.
+        }
+      }
+
+      function createSubjectOption(subjectName, isSelected) {
+        const option = document.createElement("button");
+
+        option.className = "select-option";
+        if (isSelected) {
+          option.classList.add("is-selected");
+        }
+
+        option.type = "button";
+        option.dataset.value = subjectName;
+        option.setAttribute("aria-selected", String(isSelected));
+        option.textContent = subjectName;
+        return option;
+      }
+
+      function createCheckbox(itemKey, title) {
+        const labelElement = document.createElement("label");
+        const checkbox = document.createElement("input");
+
+        labelElement.className = "phase-check";
+        checkbox.type = "checkbox";
+        checkbox.dataset.progressKey = itemKey;
+        checkbox.setAttribute("aria-label", "Mark " + title + " as completed");
+
+        labelElement.appendChild(checkbox);
+        return labelElement;
+      }
+
+      function createPhaseItem(item, tone) {
+        const itemElement = document.createElement("div");
+        const linkElement = document.createElement("a");
+        const titleElement = createTextElement("strong", item.title);
+
+        itemElement.className = "phase-item phase-item--" + tone;
+        linkElement.className = "phase-link";
+        linkElement.href = item.href;
+        linkElement.target = "_blank";
+        linkElement.rel = "noopener noreferrer";
+        linkElement.appendChild(titleElement);
+
+        itemElement.appendChild(linkElement);
+        itemElement.appendChild(createCheckbox(item.key, item.title));
+        return itemElement;
+      }
+
+      function createPhase(phase) {
+        const section = document.createElement("section");
+        const labelWrap = document.createElement("div");
+        const badge = document.createElement("span");
+        const track = document.createElement("div");
+
+        section.className = "phase";
+        labelWrap.className = "phase-label";
+        badge.className = "phase-kicker phase-kicker--" + phase.tone;
+        badge.textContent = phase.label;
+        track.className = "phase-track";
+
+        phase.items.forEach((item) => {
+          track.appendChild(createPhaseItem(item, phase.tone));
+        });
+
+        labelWrap.appendChild(badge);
+        section.appendChild(labelWrap);
+        section.appendChild(track);
+        return section;
+      }
+
+      function renderSubject(subjectName) {
+        const subject = SUBJECTS[subjectName];
+        const stack = document.createElement("div");
+
+        if (!subject) return;
+
+        stack.className = "phase-stack";
+        subject.phases.forEach((phase) => {
+          stack.appendChild(createPhase(phase));
+        });
+
+        panel.replaceChildren(stack);
+        bindProgressCheckboxes();
+      }
+
+      function bindProgressCheckboxes() {
+        const checkboxes = panel.querySelectorAll("[data-progress-key]");
+
+        checkboxes.forEach((checkbox) => {
+          const storageKey = storageKeys.progressPrefix + checkbox.dataset.progressKey;
+          const item = checkbox.closest(".phase-item");
+
+          checkbox.checked = readStorage(storageKey, "") === "1";
+          item?.classList.toggle("is-complete", checkbox.checked);
+
+          checkbox.addEventListener("change", () => {
+            item?.classList.toggle("is-complete", checkbox.checked);
+
+            if (checkbox.checked) {
+              writeStorage(storageKey, "1");
+            } else {
+              removeStorage(storageKey);
+            }
+          });
+        });
+      }
+
+      function setOpenState(isOpen) {
+        dropdown.classList.toggle("is-open", isOpen);
+        trigger.setAttribute("aria-expanded", String(isOpen));
+      }
+
+      function updateMenuSelection(selectedSubject) {
+        const options = menu.querySelectorAll(".select-option");
+
+        options.forEach((option) => {
+          const isSelected = option.dataset.value === selectedSubject;
+          option.classList.toggle("is-selected", isSelected);
+          option.setAttribute("aria-selected", String(isSelected));
+        });
+      }
+
+      function setSelectedSubject(subjectName) {
+        label.textContent = subjectName;
+        updateMenuSelection(subjectName);
+        renderSubject(subjectName);
+        writeStorage(storageKeys.subject, subjectName);
+      }
+
+      function buildSubjectMenu() {
+        const subjectNames = Object.keys(SUBJECTS);
+        const initialSubject = readStorage(storageKeys.subject, DEFAULT_SUBJECT);
+        const safeSubject = SUBJECTS[initialSubject] ? initialSubject : DEFAULT_SUBJECT;
+
+        menu.replaceChildren(
+          ...subjectNames.map((subjectName) =>
+            createSubjectOption(subjectName, subjectName === safeSubject)
+          )
+        );
+
+        menu.querySelectorAll(".select-option").forEach((option) => {
+          option.addEventListener("click", () => {
+            setSelectedSubject(option.dataset.value || DEFAULT_SUBJECT);
+            setOpenState(false);
+          });
+        });
+
+        setSelectedSubject(safeSubject);
+      }
+
+      trigger.addEventListener("click", () => {
+        setOpenState(!dropdown.classList.contains("is-open"));
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!(event.target instanceof Node)) return;
+        if (dropdown.contains(event.target)) return;
+        setOpenState(false);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          setOpenState(false);
+        }
+      });
+
+      buildSubjectMenu();
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    })();
+  </script>
+</body>
+</html>
