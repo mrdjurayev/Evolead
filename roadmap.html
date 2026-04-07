@@ -320,6 +320,11 @@
       background: #fafafa;
     }
 
+    .phase-item--focused {
+      border-color: #4ade80;
+      background: #dcfce7;
+    }
+
     .phase-check {
       display: inline-flex;
       align-items: center;
@@ -404,6 +409,7 @@
       const menu = document.getElementById("subjectMenu");
       const panel = document.getElementById("subjectPanel");
       if (!dropdown || !trigger || !label || !menu || !panel) return;
+      const requestedFocus = getRequestedFocus();
 
       const SUBJECTS = {
         English: {
@@ -876,6 +882,7 @@
         const titleElement = createTextElement("strong", item.title);
 
         itemElement.className = "phase-item phase-item--" + tone;
+        itemElement.dataset.itemKey = item.key;
         linkElement.className = "phase-link";
         linkElement.href = item.href;
         linkElement.target = "_blank";
@@ -909,19 +916,66 @@
         return section;
       }
 
-      function renderSubject(subjectName) {
-        const subject = SUBJECTS[subjectName];
+      function createSubjectStack(subject) {
         const stack = document.createElement("div");
-
-        if (!subject) return;
 
         stack.className = "phase-stack";
         subject.phases.forEach((phase) => {
           stack.appendChild(createPhase(phase));
         });
 
-        panel.replaceChildren(stack);
+        return stack;
+      }
+
+      function renderSubject(subjectName) {
+        const subject = SUBJECTS[subjectName];
+        if (!subject) return;
+
+        panel.replaceChildren(createSubjectStack(subject));
         bindProgressCheckboxes();
+      }
+
+      function getRequestedFocus() {
+        const params = new URLSearchParams(window.location.search);
+        const subject = params.get("subject") || "";
+        const itemKey = params.get("item") || "";
+        return { subject, itemKey };
+      }
+
+      function clearFocusedItems() {
+        panel.querySelectorAll(".phase-item--focused").forEach((item) => {
+          item.classList.remove("phase-item--focused");
+        });
+      }
+
+      function focusRequestedItem(itemKey) {
+        if (!itemKey) {
+          clearFocusedItems();
+          return;
+        }
+
+        const items = panel.querySelectorAll(".phase-item");
+        items.forEach((item) => {
+          item.classList.toggle("phase-item--focused", item.dataset.itemKey === itemKey);
+        });
+
+        const target = panel.querySelector('[data-item-key="' + itemKey + '"]');
+        if (!target) return;
+
+        target.setAttribute("tabindex", "-1");
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        target.focus({ preventScroll: true });
+      }
+
+      function focusSubjectPanel() {
+        clearFocusedItems();
+        panel.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }
 
       function bindProgressCheckboxes() {
@@ -961,16 +1015,27 @@
         });
       }
 
+      function applyRequestedFocus(subjectName) {
+        if (subjectName !== requestedFocus.subject) return;
+
+        if (requestedFocus.itemKey) {
+          focusRequestedItem(requestedFocus.itemKey);
+        } else {
+          focusSubjectPanel();
+        }
+      }
+
       function setSelectedSubject(subjectName) {
         label.textContent = subjectName;
         updateMenuSelection(subjectName);
         renderSubject(subjectName);
         writeStorage(storageKeys.subject, subjectName);
+        applyRequestedFocus(subjectName);
       }
 
       function buildSubjectMenu() {
         const subjectNames = Object.keys(SUBJECTS);
-        const initialSubject = readStorage(storageKeys.subject, DEFAULT_SUBJECT);
+        const initialSubject = requestedFocus.subject || readStorage(storageKeys.subject, DEFAULT_SUBJECT);
         const safeSubject = SUBJECTS[initialSubject] ? initialSubject : DEFAULT_SUBJECT;
 
         menu.replaceChildren(

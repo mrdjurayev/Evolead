@@ -94,7 +94,7 @@
       background: #ffffff;
       color: var(--text);
       text-decoration: none;
-      font-size: 0.875rem;
+      font-size: 0.95rem;
       font-weight: 600;
       white-space: nowrap;
     }
@@ -204,6 +204,7 @@
       background: #0399de;
       color: #ffffff;
       overflow: hidden;
+      transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
     }
 
     .schedule-event--royal {
@@ -222,11 +223,63 @@
       font-weight: 700;
     }
 
+    .schedule-event-title {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr);
+      align-items: start;
+      column-gap: 7px;
+    }
+
+    .schedule-event-title i {
+      width: 10px;
+      height: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      align-self: start;
+      margin-top: 2px;
+      line-height: 0;
+    }
+
+    .schedule-event-title i svg {
+      width: 10px;
+      height: 10px;
+      display: block;
+      color: rgba(255, 255, 255, 0.96);
+      stroke-width: 2;
+    }
+
+    .schedule-event-title strong {
+      min-width: 0;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
     .schedule-event span {
       font-size: 0.8rem;
       line-height: 1.4;
       color: rgba(255, 255, 255, 0.92);
       font-weight: 600;
+    }
+
+    .schedule-event--current {
+      background: #bbf7d0;
+      border-left-color: #22c55e;
+      color: #166534;
+      cursor: pointer;
+    }
+
+    .schedule-event--current strong,
+    .schedule-event--current span {
+      color: #166534;
+    }
+
+    .schedule-event--current .schedule-event-title i svg {
+      color: #166534;
     }
 
     .current-time-indicator {
@@ -321,9 +374,29 @@
       const START_HOUR = 6;
       const LAST_VISIBLE_HOUR = 22;
       const TIMELINE_END_HOUR = LAST_VISIBLE_HOUR + 1;
+      const REFRESH_INTERVAL_MS = 1000;
+      const ROADMAP_PAGE = "roadmap.html";
       const SUBJECT_STYLES = {
         royal: "schedule-event--royal",
         cyan: "schedule-event--cyan",
+      };
+      const LESSON_ICONS = {
+        "English speaking practice": "mic",
+      };
+      const ROADMAP_TARGETS = {
+        Grammar: { subject: "English", itemKey: "english-grammar" },
+        Vocabulary: { subject: "English" },
+        "English at Cambridge": { subject: "English" },
+        "English speaking practice": { subject: "English" },
+        "Computers and the Internet": {
+          subject: "Programming",
+          itemKey: "programming-computers-and-the-internet",
+        },
+        "Early math review": { subject: "Math", itemKey: "math-early-math-review" },
+        "OER Project: Big History": {
+          subject: "History",
+          itemKey: "history-oer-project-big-history",
+        },
       };
       const SCHEDULE = [
         {
@@ -371,7 +444,7 @@
           ],
         },
         {
-          title: "Cambridge student app",
+          title: "English speaking practice",
           style: "cyan",
           sessions: DAYS.map((day) => [day.key, "18:30", "20:00"]),
         },
@@ -382,6 +455,15 @@
             ["Mon", "10:30", "12:00"],
             ["Wed", "10:30", "12:00"],
             ["Fri", "10:30", "12:00"],
+          ],
+        },
+        {
+          title: "Vocabulary",
+          style: "cyan",
+          sessions: [
+            ["Mon", "08:00", "09:30"],
+            ["Wed", "08:00", "09:30"],
+            ["Fri", "08:00", "09:30"],
           ],
         },
       ];
@@ -444,12 +526,42 @@
         return schedule.flatMap((item) =>
           item.sessions.map(([day, start, end]) => ({
             title: item.title,
+            day,
             className: SUBJECT_STYLES[item.style] || "",
             dayColumn: DAY_BY_KEY[day]?.column || 0,
             start: parseTime(start),
             end: parseTime(end),
+            roadmapTarget: ROADMAP_TARGETS[item.title] || null,
           }))
         );
+      }
+
+      function createLessonTitle(lesson) {
+        const title = createTextElement("strong", lesson.title);
+        const iconName = LESSON_ICONS[lesson.title];
+
+        if (!iconName) {
+          return title;
+        }
+
+        const titleRow = document.createElement("div");
+        const icon = document.createElement("i");
+
+        titleRow.className = "schedule-event-title";
+        icon.setAttribute("data-lucide", iconName);
+        icon.setAttribute("aria-hidden", "true");
+        titleRow.append(icon, title);
+        return titleRow;
+      }
+
+      function applyRoadmapTargetData(eventCard, roadmapTarget) {
+        if (!roadmapTarget?.subject) return;
+
+        eventCard.dataset.roadmapSubject = roadmapTarget.subject;
+
+        if (roadmapTarget.itemKey) {
+          eventCard.dataset.roadmapItemKey = roadmapTarget.itemKey;
+        }
       }
 
       function createTimeCell(hour) {
@@ -488,7 +600,7 @@
 
       function createEventCard(lesson) {
         const eventCard = document.createElement("article");
-        const title = createTextElement("strong", lesson.title);
+        const title = createLessonTitle(lesson);
         const time = createTextElement(
           "span",
           formatTime(lesson.start.totalMinutes) + " - " + formatTime(lesson.end.totalMinutes)
@@ -504,6 +616,8 @@
           String(toGridRow(lesson.start.totalMinutes)) +
           " / " +
           String(toGridRow(lesson.end.totalMinutes));
+        applyRoadmapTargetData(eventCard, lesson.roadmapTarget);
+
         eventCard.append(title, time);
 
         return eventCard;
@@ -528,13 +642,15 @@
       }
 
       function buildLessons() {
-        expandLessons(SCHEDULE).forEach((lesson) => {
-          calendarGrid.appendChild(createEventCard(lesson));
+        return expandLessons(SCHEDULE).map((lesson) => {
+          const eventCard = createEventCard(lesson);
+          calendarGrid.appendChild(eventCard);
+          return { lesson, eventCard };
         });
       }
 
       buildCalendarGrid();
-      buildLessons();
+      const lessonCards = buildLessons();
 
       const timeIndicator = document.createElement("div");
       const timeIndicatorLine = document.createElement("div");
@@ -554,18 +670,78 @@
         return { weekday, hour, minute, second };
       }
 
+      function getCurrentTimeContext() {
+        const { weekday, hour, minute, second } = getTashkentDateParts();
+        return {
+          weekday,
+          dayColumn: DAY_BY_KEY[weekday]?.column || 0,
+          currentMinutes: hour * 60 + minute + second / 60,
+        };
+      }
+
       function getDayHeader(dayColumn) {
         const dayHeaders = calendarGrid.querySelectorAll(".day-header");
         return dayHeaders[dayColumn - 2] || null;
       }
 
-      function updateCurrentTimeIndicator() {
-        const { weekday, hour, minute, second } = getTashkentDateParts();
-        const currentDayColumn = DAY_BY_KEY[weekday]?.column || 0;
-        const currentMinutes = hour * 60 + minute + second / 60;
+      function getRoadmapUrl(eventCard) {
+        const subject = eventCard.dataset.roadmapSubject;
+        if (!subject) return "";
+
+        const params = new URLSearchParams();
+        params.set("subject", subject);
+
+        if (eventCard.dataset.roadmapItemKey) {
+          params.set("item", eventCard.dataset.roadmapItemKey);
+        }
+
+        return ROADMAP_PAGE + "?" + params.toString();
+      }
+
+      function isLessonCurrent(lesson, currentTime) {
+        return (
+          lesson.day === currentTime.weekday &&
+          currentTime.currentMinutes >= lesson.start.totalMinutes &&
+          currentTime.currentMinutes < lesson.end.totalMinutes
+        );
+      }
+
+      function updateEventCardInteraction(eventCard, lessonTitle, isCurrent) {
+        const roadmapUrl = getRoadmapUrl(eventCard);
+
+        eventCard.classList.toggle("schedule-event--current", isCurrent);
+
+        if (!isCurrent || !roadmapUrl) {
+          eventCard.removeAttribute("tabindex");
+          eventCard.removeAttribute("role");
+          eventCard.removeAttribute("aria-label");
+          return;
+        }
+
+        eventCard.tabIndex = 0;
+        eventCard.setAttribute("role", "link");
+        eventCard.setAttribute("aria-label", lessonTitle + " roadmap");
+      }
+
+      function updateCurrentLessonState(currentTime) {
+        lessonCards.forEach(({ lesson, eventCard }) => {
+          updateEventCardInteraction(eventCard, lesson.title, isLessonCurrent(lesson, currentTime));
+        });
+      }
+
+      function openCurrentLessonRoadmap(eventCard) {
+        if (!eventCard.classList.contains("schedule-event--current")) return;
+
+        const roadmapUrl = getRoadmapUrl(eventCard);
+        if (!roadmapUrl) return;
+
+        window.location.href = roadmapUrl;
+      }
+
+      function updateCurrentTimeIndicator(currentTime) {
         const startMinutes = START_HOUR * 60;
         const endMinutes = TIMELINE_END_HOUR * 60;
-        const dayHeader = getDayHeader(currentDayColumn);
+        const dayHeader = getDayHeader(currentTime.dayColumn);
         const firstTimeCell = calendarGrid.querySelector(".time-cell");
 
         if (!dayHeader || !firstTimeCell) {
@@ -575,7 +751,7 @@
 
         const headerHeight = dayHeader.offsetHeight;
         const hourHeight = firstTimeCell.offsetHeight;
-        const clampedMinutes = Math.min(Math.max(currentMinutes, startMinutes), endMinutes);
+        const clampedMinutes = Math.min(Math.max(currentTime.currentMinutes, startMinutes), endMinutes);
         const minutesFromStart = clampedMinutes - startMinutes;
         const top = headerHeight + (minutesFromStart / 60) * hourHeight;
 
@@ -586,11 +762,10 @@
       }
 
       function focusCurrentTimeline() {
-        const { weekday } = getTashkentDateParts();
-        const currentDayColumn = DAY_BY_KEY[weekday]?.column || 0;
-        const dayHeader = getDayHeader(currentDayColumn);
+        const currentTime = getCurrentTimeContext();
+        const dayHeader = getDayHeader(currentTime.dayColumn);
 
-        updateCurrentTimeIndicator();
+        updateCurrentTimeIndicator(currentTime);
 
         if (calendarScroll && dayHeader) {
           const targetLeft =
@@ -609,6 +784,12 @@
         });
       }
 
+      function refreshCurrentTimeUi() {
+        const currentTime = getCurrentTimeContext();
+        updateCurrentTimeIndicator(currentTime);
+        updateCurrentLessonState(currentTime);
+      }
+
       if (currentLessonButton) {
         currentLessonButton.addEventListener("click", (event) => {
           event.preventDefault();
@@ -616,9 +797,21 @@
         });
       }
 
-      updateCurrentTimeIndicator();
-      window.setInterval(updateCurrentTimeIndicator, 1000);
-      window.addEventListener("resize", updateCurrentTimeIndicator);
+      lessonCards.forEach(({ eventCard }) => {
+        eventCard.addEventListener("click", () => {
+          openCurrentLessonRoadmap(eventCard);
+        });
+
+        eventCard.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          openCurrentLessonRoadmap(eventCard);
+        });
+      });
+
+      refreshCurrentTimeUi();
+      window.setInterval(refreshCurrentTimeUi, REFRESH_INTERVAL_MS);
+      window.addEventListener("resize", refreshCurrentTimeUi);
     })();
 
     if (window.lucide) {
