@@ -271,6 +271,9 @@
       background: #bbf7d0;
       border-left-color: #22c55e;
       color: #166534;
+    }
+
+    .schedule-event--current-link {
       cursor: pointer;
     }
 
@@ -386,9 +389,6 @@
       };
       const ROADMAP_TARGETS = {
         Grammar: { subject: "English", itemKey: "english-grammar" },
-        Vocabulary: { subject: "English" },
-        "English at Cambridge": { subject: "English" },
-        "English speaking practice": { subject: "English" },
         "Computers and the Internet": {
           subject: "Programming",
           itemKey: "programming-computers-and-the-internet",
@@ -555,10 +555,25 @@
         return titleRow;
       }
 
+      function buildRoadmapUrl(roadmapTarget) {
+        if (!roadmapTarget?.subject) return "";
+
+        const params = new URLSearchParams();
+        params.set("subject", roadmapTarget.subject);
+
+        if (roadmapTarget.itemKey) {
+          params.set("item", roadmapTarget.itemKey);
+        }
+
+        return ROADMAP_PAGE + "?" + params.toString();
+      }
+
       function applyRoadmapTargetData(eventCard, roadmapTarget) {
-        if (!roadmapTarget?.subject) return;
+        const roadmapUrl = buildRoadmapUrl(roadmapTarget);
+        if (!roadmapUrl) return;
 
         eventCard.dataset.roadmapSubject = roadmapTarget.subject;
+        eventCard.dataset.roadmapUrl = roadmapUrl;
 
         if (roadmapTarget.itemKey) {
           eventCard.dataset.roadmapItemKey = roadmapTarget.itemKey;
@@ -686,17 +701,7 @@
       }
 
       function getRoadmapUrl(eventCard) {
-        const subject = eventCard.dataset.roadmapSubject;
-        if (!subject) return "";
-
-        const params = new URLSearchParams();
-        params.set("subject", subject);
-
-        if (eventCard.dataset.roadmapItemKey) {
-          params.set("item", eventCard.dataset.roadmapItemKey);
-        }
-
-        return ROADMAP_PAGE + "?" + params.toString();
+        return eventCard.dataset.roadmapUrl || "";
       }
 
       function isLessonCurrent(lesson, currentTime) {
@@ -707,12 +712,8 @@
         );
       }
 
-      function updateEventCardInteraction(eventCard, lessonTitle, isCurrent) {
-        const roadmapUrl = getRoadmapUrl(eventCard);
-
-        eventCard.classList.toggle("schedule-event--current", isCurrent);
-
-        if (!isCurrent || !roadmapUrl) {
+      function setEventCardAccessibility(eventCard, lessonTitle, canNavigate) {
+        if (!canNavigate) {
           eventCard.removeAttribute("tabindex");
           eventCard.removeAttribute("role");
           eventCard.removeAttribute("aria-label");
@@ -722,6 +723,15 @@
         eventCard.tabIndex = 0;
         eventCard.setAttribute("role", "link");
         eventCard.setAttribute("aria-label", lessonTitle + " roadmap");
+      }
+
+      function updateEventCardInteraction(eventCard, lessonTitle, isCurrent) {
+        const roadmapUrl = getRoadmapUrl(eventCard);
+        const canNavigate = isCurrent && Boolean(roadmapUrl);
+
+        eventCard.classList.toggle("schedule-event--current", isCurrent);
+        eventCard.classList.toggle("schedule-event--current-link", canNavigate);
+        setEventCardAccessibility(eventCard, lessonTitle, canNavigate);
       }
 
       function updateCurrentLessonState(currentTime) {
