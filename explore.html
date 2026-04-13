@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evolead | Explore</title>
+  <meta
+    name="description"
+    content="Explore videos, resources, and useful learning materials."
+  />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" href="https://evolead.site/explore.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Evolead" />
+  <meta property="og:title" content="Evolead | Explore" />
+  <meta
+    property="og:description"
+    content="Explore videos, resources, and useful learning materials."
+  />
+  <meta property="og:url" content="https://evolead.site/explore.html" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Evolead | Explore" />
+  <meta
+    name="twitter:description"
+    content="Explore videos, resources, and useful learning materials."
+  />
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #dbe3f0;
+      --panel: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--page-bg);
+    }
+
+    .page {
+      width: min(1220px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 20px 0 28px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.375rem, 2.5vw, 1.875rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .back-link i {
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .back-link i svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    .explore-shell {
+      min-height: 420px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 20px;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .video-card {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .video-frame {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      border: 0;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        width: min(100%, calc(100% - 20px));
+        padding-top: 16px;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .explore-shell {
+        padding: 14px;
+      }
+
+      .video-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="page-header">
+      <h1>Explore</h1>
+      <a class="back-link" href="index.html">
+        <i data-lucide="arrow-left" aria-hidden="true"></i>
+        <span>Back</span>
+      </a>
+    </div>
+
+    <section class="explore-shell" aria-label="Explore content">
+      <div class="video-grid">
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/C4KWsmezXm4"
+            title="Explore video 1"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/KF4zd2hb2nk"
+            title="Explore video 2"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/eFiHaEgXRlc"
+            title="Explore video 3"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/Wd_m0ugpcTs"
+            title="Explore video 4"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/40EUuj8XWCo"
+            title="Explore video 5"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/GBee7qwyl5k"
+            title="Explore video 6"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/xAcTmDO6NTI"
+            title="Explore video 7"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/Cj4rpkPbWt0"
+            title="Explore video 8"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/y2_BbVC5CBc"
+            title="Explore video 9"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/d02VkQ9MP44"
+            title="Explore video 10"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/TiZHrXi2qFA"
+            title="Explore video 11"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+
+        <article class="video-card">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/9QhCQapgmFk"
+            title="Explore video 12"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.563.0/dist/umd/lucide.min.js"></script>
+  <script>
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
