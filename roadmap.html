@@ -717,23 +717,17 @@
           ],
         },
       };
+      const SUBJECT_NAMES = Object.keys(SUBJECTS);
+      const AVAILABLE_ITEM_KEYS = new Set(
+        SUBJECT_NAMES.flatMap((subjectName) =>
+          SUBJECTS[subjectName].phases.flatMap((phase) => phase.items.map((item) => item.key))
+        )
+      );
 
       function createTextElement(tagName, textContent) {
         const element = document.createElement(tagName);
         element.textContent = textContent;
         return element;
-      }
-
-      function getSubjectNames() {
-        return Object.keys(SUBJECTS);
-      }
-
-      function getAvailableItemKeys() {
-        return new Set(
-          getSubjectNames().flatMap((subjectName) =>
-            SUBJECTS[subjectName].phases.flatMap((phase) => phase.items.map((item) => item.key))
-          )
-        );
       }
 
       function readStorage(key, fallback) {
@@ -762,15 +756,13 @@
       }
 
       function pruneLegacyProgressState() {
-        const validItemKeys = getAvailableItemKeys();
-
         try {
           for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
             const key = window.localStorage.key(index);
             if (!key || !key.startsWith(storageKeys.progressPrefix)) continue;
 
             const itemKey = key.slice(storageKeys.progressPrefix.length);
-            if (!validItemKeys.has(itemKey)) {
+            if (!AVAILABLE_ITEM_KEYS.has(itemKey)) {
               window.localStorage.removeItem(key);
             }
           }
@@ -964,18 +956,13 @@
         applyRequestedFocus(subjectName);
       }
 
-      function getSafeSubject(subjectName) {
-        return SUBJECTS[subjectName] ? subjectName : DEFAULT_SUBJECT;
-      }
-
       function buildSubjectMenu() {
-        const subjectNames = getSubjectNames();
         const initialSubject =
           requestedFocus.subject || readStorage(storageKeys.subject, DEFAULT_SUBJECT);
-        const safeSubject = getSafeSubject(initialSubject);
+        const safeSubject = SUBJECTS[initialSubject] ? initialSubject : DEFAULT_SUBJECT;
 
         menu.replaceChildren(
-          ...subjectNames.map((subjectName) =>
+          ...SUBJECT_NAMES.map((subjectName) =>
             createSubjectOption(subjectName, subjectName === safeSubject)
           )
         );

@@ -572,12 +572,7 @@
         const roadmapUrl = buildRoadmapUrl(roadmapTarget);
         if (!roadmapUrl) return;
 
-        eventCard.dataset.roadmapSubject = roadmapTarget.subject;
         eventCard.dataset.roadmapUrl = roadmapUrl;
-
-        if (roadmapTarget.itemKey) {
-          eventCard.dataset.roadmapItemKey = roadmapTarget.itemKey;
-        }
       }
 
       function createTimeCell(hour) {
