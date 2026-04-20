@@ -818,6 +818,18 @@
         return element;
       }
 
+      function getSubjectNames() {
+        return Object.keys(SUBJECTS);
+      }
+
+      function getAvailableItemKeys() {
+        return new Set(
+          getSubjectNames().flatMap((subjectName) =>
+            SUBJECTS[subjectName].phases.flatMap((phase) => phase.items.map((item) => item.key))
+          )
+        );
+      }
+
       function readStorage(key, fallback) {
         try {
           const value = window.localStorage.getItem(key);
@@ -838,6 +850,24 @@
       function removeStorage(key) {
         try {
           window.localStorage.removeItem(key);
+        } catch {
+          // Ignore storage errors and keep the UI usable.
+        }
+      }
+
+      function pruneLegacyProgressState() {
+        const validItemKeys = getAvailableItemKeys();
+
+        try {
+          for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+            const key = window.localStorage.key(index);
+            if (!key || !key.startsWith(storageKeys.progressPrefix)) continue;
+
+            const itemKey = key.slice(storageKeys.progressPrefix.length);
+            if (!validItemKeys.has(itemKey)) {
+              window.localStorage.removeItem(key);
+            }
+          }
         } catch {
           // Ignore storage errors and keep the UI usable.
         }
@@ -1028,10 +1058,15 @@
         applyRequestedFocus(subjectName);
       }
 
+      function getSafeSubject(subjectName) {
+        return SUBJECTS[subjectName] ? subjectName : DEFAULT_SUBJECT;
+      }
+
       function buildSubjectMenu() {
-        const subjectNames = Object.keys(SUBJECTS);
-        const initialSubject = requestedFocus.subject || readStorage(storageKeys.subject, DEFAULT_SUBJECT);
-        const safeSubject = SUBJECTS[initialSubject] ? initialSubject : DEFAULT_SUBJECT;
+        const subjectNames = getSubjectNames();
+        const initialSubject =
+          requestedFocus.subject || readStorage(storageKeys.subject, DEFAULT_SUBJECT);
+        const safeSubject = getSafeSubject(initialSubject);
 
         menu.replaceChildren(
           ...subjectNames.map((subjectName) =>
@@ -1048,6 +1083,8 @@
 
         setSelectedSubject(safeSubject);
       }
+
+      pruneLegacyProgressState();
 
       trigger.addEventListener("click", () => {
         setOpenState(!dropdown.classList.contains("is-open"));
