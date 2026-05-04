@@ -36,123 +36,28 @@
       </a>
     </div>
 
+    <div class="add-bar">
+      <input
+        class="add-input"
+        id="videoUrlInput"
+        type="url"
+        placeholder="YouTube havolani bu yerga nusxalab tashlang..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="add-btn" id="addVideoBtn" type="button">
+        <i data-lucide="plus" aria-hidden="true"></i>
+        <span>Qo'shish</span>
+      </button>
+    </div>
+
     <section class="explore-shell" aria-label="Explore content">
-      <div class="video-grid">
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/7EgTPPduIQE"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/qKM4JzToM-A"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/P7yF1z3JXAo"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/o6zb6_TTVWo"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/60h6lpnSgck"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/f7oXhDatwtY"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/tc4ROCJYbm0"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/szdbKz5CyhA"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/ruHju6JCCDo"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-
-        <article class="video-card">
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/fFs7LUtLBT4"
-            title="Explore video"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </article>
-      </div>
+      <div class="video-grid" id="videoGrid"></div>
     </section>
   </main>
 
   <script defer src="https://unpkg.com/lucide@0.563.0/dist/umd/lucide.min.js"></script>
+  <script defer src="assets/explore.js"></script>
   <script defer src="assets/icons.js"></script>
 </body>
 </html>

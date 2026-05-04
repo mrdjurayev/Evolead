@@ -27,6 +27,66 @@ body {
   padding: 20px 0 28px;
 }
 
+.add-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.add-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.add-input:focus {
+  border-color: var(--muted);
+}
+
+.add-input.is-error {
+  border-color: #ef4444;
+  background: #fff5f5;
+}
+
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.add-btn:hover {
+  background: #f6f8fc;
+  border-color: #c9d5ea;
+}
+
+.add-btn i {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .explore-shell {
   min-height: 420px;
   border: 1px solid var(--line);
@@ -41,15 +101,57 @@ body {
 }
 
 .video-card {
+  position: relative;
   border: 1px solid var(--line);
   background: #ffffff;
   overflow: hidden;
+}
+
+.video-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.video-card:hover .video-actions {
+  opacity: 1;
+}
+
+.video-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0;
+}
+
+.video-delete:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.video-delete i {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .video-frame {
   aspect-ratio: 16 / 9;
   width: 100%;
   border: 0;
+  display: block;
 }
 
 @media (max-width: 900px) {
