@@ -1,4 +1,4 @@
-const AUTH_HASH = '6b5a4fc321df1cf3f68311c38e9b067d32cd1b6dab16528845efc8d2b0090670';
+const AUTH_HASH = '40d1da3cb9e16e214ac32bbed3acb7a40502ccd275cadbaaab24e45f0152884d';
 const SESSION_KEY = 'evolead_auth';
 
 async function hashPassword(pw) {
