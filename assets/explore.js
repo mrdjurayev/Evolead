@@ -50,7 +50,7 @@ function render() {
       (id) => `
     <article class="video-card">
       <div class="video-actions">
-        <button class="video-delete" type="button" data-id="${id}" aria-label="O'chirish">
+        <button class="video-delete" type="button" data-id="${id}" aria-label="Remove">
           <i data-lucide="trash-2"></i>
         </button>
       </div>
