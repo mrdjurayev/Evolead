@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evolead | Sign in</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/login.css" />
+</head>
+<body>
+  <div class="login-card">
+    <h1 class="login-brand">Evolead <span>/ Sign in</span></h1>
+
+    <div class="login-field">
+      <label class="login-label" for="passwordInput">Password</label>
+      <input
+        class="login-input"
+        id="passwordInput"
+        type="password"
+        autocomplete="current-password"
+        autofocus
+      />
+    </div>
+
+    <p class="login-error" id="loginError" aria-live="polite"></p>
+
+    <button class="login-btn" id="loginBtn" type="button">Sign in</button>
+  </div>
+
+  <script src="assets/auth.js"></script>
+  <script>
+    const input = document.getElementById('passwordInput');
+    const btn   = document.getElementById('loginBtn');
+    const err   = document.getElementById('loginError');
+
+    async function doLogin() {
+      btn.disabled = true;
+      err.textContent = '';
+      input.classList.remove('is-error');
+
+      const ok = await attemptLogin(input.value);
+
+      if (ok) {
+        const dest = new URLSearchParams(location.search).get('next') || 'index.html';
+        location.replace(dest);
+      } else {
+        err.textContent = 'Incorrect password.';
+        input.classList.add('is-error');
+        input.select();
+        btn.disabled = false;
+      }
+    }
+
+    btn.addEventListener('click', doLogin);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+  </script>
+</body>
+</html>
