@@ -1,3 +1,5 @@
+@import url("page-header.css");
+
 :root {
   color-scheme: light;
   --page-bg: #ffffff;
@@ -32,29 +34,79 @@ body {
   padding: 20px 0 28px;
 }
 
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.landing-hero {
+  display: grid;
   gap: 16px;
-  padding: 12px 0;
-  border-radius: 12px;
-  background: #ffffff;
-  margin-bottom: 8px;
+  padding: 14px 0 18px;
 }
 
-.header-actions {
+.landing-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.nav-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--text);
+  text-decoration: none;
+  min-height: 70px;
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-1px);
+  border-color: #c9d5ea;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.nav-card:focus-visible {
+  outline: 3px solid rgba(26, 115, 232, 0.28);
+  outline-offset: 2px;
+}
+
+.nav-card-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #f6f8fc;
+  border: 1px solid var(--line);
+}
+
+.nav-card-icon i {
+  width: 18px;
+  height: 18px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  color: var(--muted);
 }
 
-h1 {
-  margin: 0;
-  font-size: clamp(1.375rem, 2.5vw, 1.875rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  font-weight: 600;
+.nav-card-icon i svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.nav-card-body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.nav-card-body strong {
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .roadmap-link {
@@ -98,12 +150,6 @@ h1 {
   border: 1px solid var(--line);
   background: var(--panel);
   overflow: hidden;
-}
-
-.page-footer-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 18px;
 }
 
 .calendar-scroll {
@@ -301,13 +347,9 @@ h1 {
     padding-top: 16px;
   }
 
-  .page-header {
-    align-items: flex-start;
-    flex-direction: column;
+  .landing-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .header-actions {
-    flex-wrap: wrap;
-  }
 }
 

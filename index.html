@@ -28,40 +28,48 @@
 </head>
 <body>
   <main class="page">
-    <div class="page-header">
-      <h1>Lesson schedule</h1>
-      <div class="header-actions">
-        <a class="roadmap-link" href="#" id="currentLessonButton">
-          <i data-lucide="radio" aria-hidden="true"></i>
-          <span>Current lesson</span>
+    <header class="landing-hero" aria-label="Evolead navigation">
+      <nav class="landing-nav" aria-label="Main sections">
+        <a class="nav-card" href="courses.html">
+          <div class="nav-card-icon" aria-hidden="true">
+            <i data-lucide="graduation-cap"></i>
+          </div>
+          <div class="nav-card-body">
+            <strong>Courses</strong>
+          </div>
         </a>
-        <a class="roadmap-link" href="roadmap.html">
-          <i data-lucide="map" aria-hidden="true"></i>
-          <span>Roadmap</span>
-        </a>
-        <a class="roadmap-link" href="courses.html">
-          <i data-lucide="graduation-cap" aria-hidden="true"></i>
-          <span>Courses</span>
-        </a>
-      </div>
-    </div>
 
-    <section class="schedule-shell" aria-label="Weekly lesson calendar">
-      <div class="calendar-scroll">
-        <div class="calendar-grid" id="calendarGrid"></div>
-      </div>
-    </section>
+        <a class="nav-card" href="explore.html">
+          <div class="nav-card-icon" aria-hidden="true">
+            <i data-lucide="compass"></i>
+          </div>
+          <div class="nav-card-body">
+            <strong>Explore</strong>
+          </div>
+        </a>
 
-    <div class="page-footer-actions">
-      <a class="roadmap-link" href="explore.html">
-        <i data-lucide="compass" aria-hidden="true"></i>
-        <span>Explore</span>
-      </a>
-    </div>
+        <a class="nav-card" href="roadmap.html">
+          <div class="nav-card-icon" aria-hidden="true">
+            <i data-lucide="map"></i>
+          </div>
+          <div class="nav-card-body">
+            <strong>Roadmap</strong>
+          </div>
+        </a>
+
+        <a class="nav-card" href="lesson-schedule.html">
+          <div class="nav-card-icon" aria-hidden="true">
+            <i data-lucide="calendar-days"></i>
+          </div>
+          <div class="nav-card-body">
+            <strong>Lesson schedule</strong>
+          </div>
+        </a>
+      </nav>
+    </header>
   </main>
 
   <script defer src="https://unpkg.com/lucide@0.563.0/dist/umd/lucide.min.js"></script>
-  <script defer src="assets/index.js"></script>
   <script defer src="assets/icons.js"></script>
 </body>
 </html>
