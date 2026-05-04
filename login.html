@@ -33,12 +33,11 @@
     const btn   = document.getElementById('loginBtn');
     const err   = document.getElementById('loginError');
 
-    async function doLogin() {
-      btn.disabled = true;
+    function doLogin() {
       err.textContent = '';
       input.classList.remove('is-error');
 
-      const ok = await attemptLogin(input.value);
+      const ok = attemptLogin(input.value);
 
       if (ok) {
         const dest = new URLSearchParams(location.search).get('next') || 'index.html';
@@ -47,7 +46,6 @@
         err.textContent = 'Incorrect password.';
         input.classList.add('is-error');
         input.select();
-        btn.disabled = false;
       }
     }
 
