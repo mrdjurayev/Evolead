@@ -27,25 +27,30 @@
     <button class="login-btn" id="loginBtn" type="button">Log in</button>
   </div>
 
-  <script src="assets/auth.js"></script>
+  <script src="assets/auth.js?v=3"></script>
   <script>
     const input = document.getElementById('passwordInput');
     const btn   = document.getElementById('loginBtn');
     const err   = document.getElementById('loginError');
 
     function doLogin() {
-      err.textContent = '';
-      input.classList.remove('is-error');
+      try {
+        err.textContent = '';
+        input.classList.remove('is-error');
 
-      const ok = attemptLogin(input.value);
+        const ok = attemptLogin(input.value);
 
-      if (ok) {
-        const dest = new URLSearchParams(location.search).get('next') || 'index.html';
-        location.replace(dest);
-      } else {
-        err.textContent = 'Incorrect password.';
-        input.classList.add('is-error');
-        input.select();
+        if (ok) {
+          const dest = new URLSearchParams(location.search).get('next') || 'index.html';
+          location.replace(dest);
+        } else {
+          err.textContent = 'Incorrect password.';
+          input.classList.add('is-error');
+          input.select();
+        }
+      } catch (e) {
+        err.textContent = 'Error: ' + e.message;
+        console.error(e);
       }
     }
 
