@@ -112,12 +112,19 @@ body {
   top: 6px;
   right: 6px;
   z-index: 2;
-  opacity: 0;
+  /* Touch devices have no reliable hover — keep delete visible. */
+  opacity: 1;
   transition: opacity 0.15s;
 }
 
-.video-card:hover .video-actions {
-  opacity: 1;
+@media (hover: hover) {
+  .video-actions {
+    opacity: 0;
+  }
+
+  .video-card:hover .video-actions {
+    opacity: 1;
+  }
 }
 
 .video-delete {
