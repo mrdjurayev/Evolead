@@ -1,4 +1,8 @@
 const STORAGE_KEY = 'explore_videos';
+const CANONICAL_HASH_KEY = 'explore_canonical_hash';
+const STORAGE_VERSION_KEY = 'explore_storage_version';
+const STORAGE_VERSION = '2';
+const CATALOG_URL = 'assets/explore-videos.json';
 
 const DEFAULT_IDS = [
   '7EgTPPduIQE',
@@ -13,12 +17,57 @@ const DEFAULT_IDS = [
   'fFs7LUtLBT4',
 ];
 
-function loadIds() {
+function canonicalHash(ids) {
+  return ids.join('|');
+}
+
+function normalizeIds(value) {
+  if (!Array.isArray(value)) return null;
+  const ids = value.filter((id) => typeof id === 'string' && /^[A-Za-z0-9_-]{11}$/.test(id));
+  return ids.length ? ids : null;
+}
+
+async function fetchCanonicalIds() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    const res = await fetch(CATALOG_URL, { cache: 'no-cache' });
+    if (!res.ok) throw new Error('catalog fetch failed');
+    const data = await res.json();
+    const ids = normalizeIds(data);
+    if (ids) return ids;
   } catch {}
   return [...DEFAULT_IDS];
+}
+
+function migrateStorage() {
+  if (localStorage.getItem(STORAGE_VERSION_KEY) === STORAGE_VERSION) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(CANONICAL_HASH_KEY);
+  localStorage.setItem(STORAGE_VERSION_KEY, STORAGE_VERSION);
+}
+
+async function loadIds() {
+  migrateStorage();
+
+  const canonical = await fetchCanonicalIds();
+  const hash = canonicalHash(canonical);
+  const storedHash = localStorage.getItem(CANONICAL_HASH_KEY);
+
+  if (storedHash !== hash) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(canonical));
+    localStorage.setItem(CANONICAL_HASH_KEY, hash);
+    return canonical;
+  }
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const ids = normalizeIds(JSON.parse(raw));
+      if (ids) return ids;
+    }
+  } catch {}
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(canonical));
+  return canonical;
 }
 
 function saveIds(ids) {
@@ -41,11 +90,13 @@ function parseYouTubeId(input) {
   return null;
 }
 
-function render() {
-  const ids = loadIds();
-  const grid = document.getElementById('videoGrid');
+let currentIds = [];
 
-  grid.innerHTML = ids
+function render() {
+  const grid = document.getElementById('videoGrid');
+  if (!grid) return;
+
+  grid.innerHTML = currentIds
     .map(
       (id) => `
     <article class="video-card">
@@ -70,8 +121,8 @@ function render() {
 
   grid.querySelectorAll('.video-delete').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const updated = loadIds().filter((i) => i !== btn.dataset.id);
-      saveIds(updated);
+      currentIds = currentIds.filter((i) => i !== btn.dataset.id);
+      saveIds(currentIds);
       render();
     });
   });
@@ -87,10 +138,9 @@ function addVideo() {
     return;
   }
 
-  const ids = loadIds();
-  if (!ids.includes(id)) {
-    ids.push(id);
-    saveIds(ids);
+  if (!currentIds.includes(id)) {
+    currentIds.push(id);
+    saveIds(currentIds);
     render();
   }
 
@@ -98,7 +148,8 @@ function addVideo() {
   input.focus();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  currentIds = await loadIds();
   render();
 
   document.getElementById('addVideoBtn').addEventListener('click', addVideo);
