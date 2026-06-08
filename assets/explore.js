@@ -138,11 +138,13 @@ function addVideo() {
     return;
   }
 
-  if (!currentIds.includes(id)) {
-    currentIds.push(id);
-    saveIds(currentIds);
-    render();
+  if (currentIds.includes(id)) {
+    currentIds = [id, ...currentIds.filter((i) => i !== id)];
+  } else {
+    currentIds.unshift(id);
   }
+  saveIds(currentIds);
+  render();
 
   input.value = '';
   input.focus();
