@@ -87,6 +87,13 @@ body {
   justify-content: center;
 }
 
+.add-status {
+  margin: 0 0 12px;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .explore-shell {
   min-height: 420px;
   border: 1px solid var(--line);
@@ -101,10 +108,15 @@ body {
 }
 
 .video-card {
-  position: relative;
   border: 1px solid var(--line);
   background: #ffffff;
   overflow: hidden;
+}
+
+.video-frame-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
 }
 
 .video-actions {
@@ -156,8 +168,10 @@ body {
 }
 
 .video-frame {
-  aspect-ratio: 16 / 9;
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
   border: 0;
   display: block;
 }
