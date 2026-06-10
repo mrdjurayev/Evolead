@@ -208,6 +208,32 @@ function parseYouTubeId(input) {
   return null;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function buildVideoSrcDoc(id) {
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0`;
+  const thumbnailUrl = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+
+  return escapeHtml(`
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;background:#0f172a;font-family:Arial,sans-serif}
+      a{position:absolute;inset:0;display:grid;place-items:center;color:white;text-decoration:none;background:url('${thumbnailUrl}') center/cover no-repeat}
+      a::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,23,42,.08),rgba(15,23,42,.45))}
+      span{position:relative;display:grid;place-items:center;width:68px;height:48px;border-radius:8px;background:#ef4444;box-shadow:0 8px 24px rgba(15,23,42,.3)}
+      span::before{content:"";margin-left:4px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent white}
+      @media (max-width:480px){span{width:60px;height:42px}}
+    </style>
+    <a href="${embedUrl}" aria-label="Play video"><span></span></a>
+  `);
+}
+
 let currentIds = [];
 
 function render() {
@@ -226,10 +252,12 @@ function render() {
         </div>
         <iframe
           class="video-frame"
-          src="https://www.youtube.com/embed/${id}"
+          src="https://www.youtube-nocookie.com/embed/${id}?playsinline=1&rel=0"
+          srcdoc="${buildVideoSrcDoc(id)}"
           title="Explore video"
           loading="${index < 2 ? 'eager' : 'lazy'}"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         ></iframe>
       </div>
