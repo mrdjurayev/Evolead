@@ -9,6 +9,13 @@
 <script>
   const TUTOR_ACCESS_HASH = 'ab493e2d49722089e5fffec94c24f1d00f4bfbc18aa6fe5d5e32fee18bcd5e58';
   const TUTOR_SESSION_KEY = 'evolead_tutor_access';
+  const tutorParams = new URLSearchParams(location.search);
+  const accessCode = tutorParams.get('access');
+
+  if (accessCode && sha256(accessCode.trim()) === TUTOR_ACCESS_HASH) {
+    localStorage.setItem(TUTOR_SESSION_KEY, TUTOR_ACCESS_HASH);
+    history.replaceState(null, '', location.pathname);
+  }
 
   if (
     sessionStorage.getItem(SESSION_KEY) !== AUTH_HASH ||
@@ -17,7 +24,7 @@
     location.replace(
       sessionStorage.getItem(SESSION_KEY) === AUTH_HASH
         ? 'index.html'
-        : 'login.html?next=index.html'
+        : `login.html?next=${encodeURIComponent(`english_tutor.html${location.search}`)}`
     );
   }
 </script>
