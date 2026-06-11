@@ -89,11 +89,16 @@
     const TUTOR_SESSION_KEY = 'evolead_tutor_access';
 
     function unlockTutor() {
+      if (localStorage.getItem(TUTOR_SESSION_KEY) === TUTOR_ACCESS_HASH) {
+        location.href = 'english_tutor.html';
+        return;
+      }
+
       const key = prompt('Access key');
       if (!key) return;
 
       if (sha256(key.trim()) === TUTOR_ACCESS_HASH) {
-        sessionStorage.setItem(TUTOR_SESSION_KEY, TUTOR_ACCESS_HASH);
+        localStorage.setItem(TUTOR_SESSION_KEY, TUTOR_ACCESS_HASH);
         location.href = 'english_tutor.html';
         return;
       }
