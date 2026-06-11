@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI English Tutor</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="assets/auth.js?v=3"></script>
+<script>
+  const TUTOR_ACCESS_HASH = 'ab493e2d49722089e5fffec94c24f1d00f4bfbc18aa6fe5d5e32fee18bcd5e58';
+  const TUTOR_SESSION_KEY = 'evolead_tutor_access';
+
+  if (
+    sessionStorage.getItem(SESSION_KEY) !== AUTH_HASH ||
+    sessionStorage.getItem(TUTOR_SESSION_KEY) !== TUTOR_ACCESS_HASH
+  ) {
+    location.replace(
+      sessionStorage.getItem(SESSION_KEY) === AUTH_HASH
+        ? 'index.html'
+        : 'login.html?next=index.html'
+    );
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e11;
+    --surface: #17171c;
+    --surface2: #1e1e25;
+    --border: #2a2a35;
+    --accent: #c8a96e;
+    --accent2: #7c6fe0;
+    --text: #f0ede8;
+    --muted: #8a8798;
+    --success: #5ec98a;
+    --danger: #e06b6b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+  #setup-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; background: radial-gradient(ellipse at 30% 50%, #1a1528 0%, var(--bg) 60%); }
+  .setup-box { max-width: 480px; width: 100%; text-align: center; }
+  .setup-box h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+  .setup-box p { color: var(--muted); margin-bottom: 2rem; font-size: 15px; }
+  .setup-box input { width: 100%; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
+  .setup-box input:focus { border-color: var(--accent); }
+  .setup-box button { width: 100%; padding: 14px; background: var(--accent); color: #0e0e11; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+  .setup-box button:hover { opacity: 0.88; }
+  .setup-note { margin-top: 1rem; font-size: 13px; color: var(--muted); }
+  .setup-note a { color: var(--accent); text-decoration: none; }
+
+  #app { display: none; min-height: 100vh; }
+  header { border-bottom: 1px solid var(--border); padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent); font-weight: 600; }
+  .logo span { color: var(--muted); font-weight: 300; font-size: 0.85rem; font-family: 'DM Sans', sans-serif; margin-left: 10px; }
+  .logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+  .main { display: flex; min-height: calc(100vh - 61px); }
+  .sidebar { width: 220px; border-right: 1px solid var(--border); padding: 1.5rem 1rem; background: var(--surface); flex-shrink: 0; }
+  .sidebar-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.75rem; padding-left: 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; color: var(--muted); font-size: 14px; font-weight: 400; transition: all 0.15s; margin-bottom: 4px; border: 1px solid transparent; }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--surface2); color: var(--accent); border-color: var(--border); }
+
+  .content { flex: 1; padding: 2rem; max-width: 780px; }
+  .panel { display: none; animation: fadeIn 0.2s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .panel-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .panel-sub { color: var(--muted); font-size: 14px; margin-bottom: 1.5rem; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 8px; }
+  textarea, select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.2s; }
+  textarea { min-height: 110px; resize: vertical; }
+  textarea:focus, select:focus { border-color: var(--accent); }
+
+  .btn { margin-top: 12px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-gold { background: var(--accent); color: #0e0e11; border-color: var(--accent); }
+  .btn-gold:hover { opacity: 0.88; color: #0e0e11; }
+
+  .result-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; margin-top: 1rem; }
+  .result-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 8px; font-weight: 500; }
+  .result-text { color: var(--text); line-height: 1.75; white-space: pre-wrap; font-size: 15px; }
+
+  .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+  .status-correct { background: rgba(94,201,138,0.15); color: var(--success); border: 1px solid rgba(94,201,138,0.3); }
+  .status-incorrect { background: rgba(224,107,107,0.15); color: var(--danger); border: 1px solid rgba(224,107,107,0.3); }
+
+  .loading { display: none; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; margin-top: 12px; }
+  .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error { color: var(--danger); font-size: 14px; margin-top: 10px; }
+
+  .vocab-word { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 2px; }
+  .vocab-meta { font-size: 13px; color: var(--muted); margin-bottom: 0.5rem; }
+  .vocab-section { margin-top: 10px; }
+  .vocab-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); margin-bottom: 4px; font-weight: 500; }
+  .vocab-example { background: var(--bg); border-left: 2px solid var(--accent); padding: 6px 12px; border-radius: 0 6px 6px 0; font-size: 14px; color: var(--muted); margin: 4px 0; font-style: italic; }
+  .badge { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 12px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); margin-left: 8px; vertical-align: middle; }
+  .tip-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .vocab-item { border-bottom: 1px solid var(--border); padding-bottom: 1.2rem; margin-bottom: 1.2rem; }
+  .vocab-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .uz-text { font-size: 1.15rem; line-height: 1.8; color: var(--text); }
+  .example-item { background: var(--bg); border-left: 2px solid var(--accent2); padding: 8px 14px; border-radius: 0 6px 6px 0; font-size: 14px; margin: 5px 0; }
+  .example-en { color: var(--text); }
+  .example-uz { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+  @media (max-width: 600px) { .sidebar { display: none; } .content { padding: 1.2rem; } }
+</style>
+</head>
+<body>
+
+<div id="setup-screen">
+  <div class="setup-box">
+    <h1>English Tutor AI</h1>
+    <p>Your personal AI-powered English learning app.<br>Enter your Anthropic API key to get started.</p>
+    <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
+    <button onclick="startApp()">Start learning →</button>
+    <p class="setup-note">Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>Your key stays in your browser only.</p>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="logo">English Tutor AI <span>powered by Claude</span></div>
+    <button class="logout-btn" onclick="logout()">Change key</button>
+  </header>
+  <div class="main">
+    <aside class="sidebar">
+      <div class="sidebar-label">Tools</div>
+      <div class="nav-item active" onclick="switchTab('grammar', this)"><span>✍️</span> Grammar checker</div>
+      <div class="nav-item" onclick="switchTab('vocab', this)"><span>📖</span> Daily vocabulary</div>
+      <div class="nav-item" onclick="switchTab('translate', this)"><span>🌐</span> Translator</div>
+    </aside>
+
+    <div class="content">
+
+      <!-- GRAMMAR PANEL -->
+      <div id="panel-grammar" class="panel active">
+        <div class="panel-title">Grammar checker</div>
+        <div class="panel-sub">Enter English or Uzbek text — check grammar or translate.</div>
+        <div class="card">
+          <label>Enter a word, phrase, or sentence (English or Uzbek)</label>
+          <textarea id="grammar-input" placeholder="Type here…"></textarea>
+          <button class="btn btn-gold" onclick="checkGrammar()">✓ Check</button>
+        </div>
+        <div class="loading" id="grammar-loading"><div class="spinner"></div> Checking…</div>
+        <div class="error" id="grammar-error"></div>
+        <div id="grammar-result" style="display:none"></div>
+      </div>
+
+      <!-- VOCAB PANEL -->
+      <div id="panel-vocab" class="panel">
+        <div class="panel-title">Daily vocabulary</div>
+        <div class="panel-sub">10 new words every time — with Uzbek meanings and examples.</div>
+        <div class="card">
+          <label>Select level</label>
+          <select id="vocab-level">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate" selected>Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+          <button class="btn btn-gold" onclick="getVocab()">↻ Get 10 words</button>
+        </div>
+        <div class="loading" id="vocab-loading"><div class="spinner"></div> Loading words…</div>
+        <div class="error" id="vocab-error"></div>
+        <div id="vocab-history"></div>
+      </div>
+
+      <!-- TRANSLATE PANEL -->
+      <div id="panel-translate" class="panel">
+        <div class="panel-title">Translator</div>
+        <div class="panel-sub">English ↔ Uzbek — translate in both directions.</div>
+        <div class="card">
+          <label>Enter English or Uzbek text</label>
+          <textarea id="translate-input" placeholder="e.g. resilience / The weather is nice / Men sizni sog'indim"></textarea>
+          <button class="btn btn-gold" onclick="doTranslate()">→ Translate</button>
+        </div>
+        <div class="loading" id="translate-loading"><div class="spinner"></div> Translating…</div>
+        <div class="error" id="translate-error"></div>
+        <div id="translate-result" style="display:none"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+let API_KEY = '';
+
+function startApp() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant')) { alert('Iltimos, to\'g\'ri API kalit kiriting (sk-ant- bilan boshlanadi)'); return; }
+  API_KEY = key;
+  localStorage.setItem('et_key', key);
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+function logout() {
+  API_KEY = '';
+  localStorage.removeItem('et_key');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('api-key-input').value = '';
+}
+
+
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  el.classList.add('active');
+}
+
+async function callClaude(system, user, maxTokens = 1500) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: maxTokens,
+      system,
+      messages: [{ role: 'user', content: user }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content.map(b => b.text || '').join('');
+}
+
+// ── GRAMMAR ──
+async function checkGrammar() {
+  const text = document.getElementById('grammar-input').value.trim();
+  if (!text) return;
+  const resultDiv = document.getElementById('grammar-result');
+  resultDiv.style.display = 'none';
+  document.getElementById('grammar-error').textContent = '';
+  document.getElementById('grammar-loading').style.display = 'flex';
+
+  const isSingleWord = text.trim().split(/\s+/).length === 1;
+
+  try {
+    let raw, obj;
+
+    if (isSingleWord) {
+      // Single call: detect lang + process
+      raw = await callClaude(
+        `You are an English tutor for Uzbek learners.
+Detect if the input is English or Uzbek, then:
+- If UZBEK: translate to English, provide 3 example sentences.
+- If ENGLISH: check if it's a real word. If valid, give Uzbek meaning + 3 examples. If invalid, say not found.
+Respond ONLY in JSON (no markdown):
+{
+  "lang": "en" or "uz",
+  "valid": true/false,
+  "word": "...",
+  "uzbekMeaning": "...(if English input)",
+  "englishTranslation": "...(if Uzbek input)",
+  "examples": [{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."}]
+}`, text);
+      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+
+      if (obj.lang === 'uz') {
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge status-correct">🇺🇿 → 🇬🇧 Uzbek → English</div>
+            <div class="result-label" style="margin-top:8px;">English translation</div>
+            <div style="font-size:1.1rem;font-weight:500;color:var(--success);margin-bottom:12px;">${obj.englishTranslation}</div>
+            <div class="result-label">Examples</div>
+            ${obj.examples.map(e => `<div class="example-item"><div class="example-en">${e.en}</div><div class="example-uz">${e.uz}</div></div>`).join('')}
+          </div>`;
+      } else if (!obj.valid) {
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge status-incorrect">❌ Not found</div>
+            <div class="result-text">"${text}" — this word was not found. Check the spelling.</div>
+          </div>`;
+      } else {
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge status-correct">✅ Valid word</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--accent);margin-bottom:4px;">${obj.word}</div>
+            <div style="font-size:1rem;font-weight:500;margin-bottom:12px;">🇺🇿 ${obj.uzbekMeaning}</div>
+            <div class="result-label">Examples</div>
+            ${obj.examples.map(e => `<div class="example-item"><div class="example-en">${e.en}</div><div class="example-uz">${e.uz}</div></div>`).join('')}
+          </div>`;
+      }
+
+    } else {
+      // Single call: detect lang + analyze/translate
+      raw = await callClaude(
+        `You are an expert English tutor for Uzbek learners.
+Detect if the input is English or Uzbek, then:
+- If UZBEK: translate it to English naturally.
+- If ENGLISH: check if it is grammatically correct AND natural. If wrong, give corrected version + explanations in English and Uzbek.
+Always provide Uzbek translation of the input (or corrected version).
+Respond ONLY in JSON (no markdown):
+{
+  "lang": "en" or "uz",
+  "status": "correct" or "incorrect" or "uzbek",
+  "uzbekTranslation": "...",
+  "englishTranslation": "...(if Uzbek input, else empty)",
+  "correctedVersion": "...(if incorrect English, else same as input)",
+  "explanationEN": "...(if incorrect, else empty)",
+  "explanationUZ": "...(if incorrect, else empty)"
+}`, text);
+      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+
+      if (obj.lang === 'uz') {
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge status-correct">🇺🇿 → 🇬🇧 Uzbek → English</div>
+            <div class="result-label" style="margin-top:8px;">English translation</div>
+            <div style="font-size:1.05rem;font-weight:500;color:var(--success);">${obj.englishTranslation}</div>
+          </div>`;
+      } else {
+        const isCorrect = obj.status === 'correct';
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge ${isCorrect ? 'status-correct' : 'status-incorrect'}">
+              ${isCorrect ? '✅ Correct / Natural' : '❌ Incorrect / Unnatural'}
+            </div>
+            ${!isCorrect ? `
+              <div class="result-label" style="margin-top:8px;">✏️ Correct version</div>
+              <div style="font-size:1.05rem;font-weight:500;color:var(--success);margin-bottom:8px;">${obj.correctedVersion}</div>
+            ` : ''}
+            <div class="result-label">🇺🇿 Uzbek translation</div>
+            <div style="font-size:1rem;margin-bottom:${!isCorrect ? '12px' : '0'};">${obj.uzbekTranslation}</div>
+            ${!isCorrect ? `
+              <div class="result-label">📝 Explanation (English)</div>
+              <div class="result-text" style="margin-bottom:10px;">${obj.explanationEN}</div>
+              <div class="result-label">📝 Explanation (Uzbek)</div>
+              <div class="result-text">${obj.explanationUZ}</div>
+            ` : ''}
+          </div>`;
+      }
+    }
+
+    resultDiv.style.display = 'block';
+  } catch(e) {
+    document.getElementById('grammar-error').textContent = 'Error: ' + e.message;
+  }
+  document.getElementById('grammar-loading').style.display = 'none';
+}
+
+// ── VOCABULARY ──
+let vocabHistory = JSON.parse(localStorage.getItem('vocab_history') || '[]');
+
+function renderVocabHistory() {
+  const container = document.getElementById('vocab-history');
+  if (!vocabHistory.length) { container.innerHTML = ''; return; }
+  container.innerHTML = [...vocabHistory].reverse().map(session => `
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <div style="font-size:13px;font-weight:500;color:var(--accent);">📅 ${session.date}</div>
+        <span class="badge">${session.level}</span>
+      </div>
+      ${session.words.map((w, i) => `
+        <div class="vocab-item">
+          <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;">
+            <span style="color:var(--muted);font-size:13px;">${i+1}.</span>
+            <span class="vocab-word">${w.word}</span>
+            <span class="badge">${w.partOfSpeech}</span>
+          </div>
+          <div class="vocab-meta">${w.pronunciation}</div>
+          <div style="font-size:14px;color:var(--muted);margin-bottom:4px;">${w.definition}</div>
+          <div style="font-size:1rem;font-weight:500;margin-bottom:6px;">🇺🇿 ${w.uzbekMeaning}</div>
+          <div class="vocab-example">${w.example1}</div>
+          <div class="vocab-example">${w.example2}</div>
+        </div>`).join('')}
+    </div>
+  `).join('');
+}
+
+async function getVocab() {
+  const level = document.getElementById('vocab-level').value;
+  document.getElementById('vocab-error').textContent = '';
+  document.getElementById('vocab-loading').style.display = 'flex';
+  try {
+    const raw = await callClaude(
+      `You are an English vocabulary teacher for Uzbek learners.
+Give exactly 10 unique, useful ${level}-level English words.
+For each word provide: word, pronunciation, part of speech, simple English definition, Uzbek meaning, and 2 example sentences.
+Respond ONLY in JSON array (no markdown, no preamble):
+[{"word":"...","pronunciation":"...","partOfSpeech":"...","definition":"...","uzbekMeaning":"...","example1":"...","example2":"..."}]`,
+      `Give me 10 ${level}-level English vocabulary words.`,
+      2500
+    );
+    const words = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    const dateStr = new Date().toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    vocabHistory.push({ date: dateStr, level, words });
+    if (vocabHistory.length > 10) vocabHistory = vocabHistory.slice(-10);
+    localStorage.setItem('vocab_history', JSON.stringify(vocabHistory));
+    renderVocabHistory();
+  } catch(e) {
+    document.getElementById('vocab-error').textContent = 'Error: ' + e.message;
+  }
+  document.getElementById('vocab-loading').style.display = 'none';
+}
+
+// ── TRANSLATOR ──
+async function doTranslate() {
+  const text = document.getElementById('translate-input').value.trim();
+  if (!text) return;
+  const resultDiv = document.getElementById('translate-result');
+  resultDiv.style.display = 'none';
+  document.getElementById('translate-error').textContent = '';
+  document.getElementById('translate-loading').style.display = 'flex';
+
+  const isSingleWord = text.trim().split(/\s+/).length === 1;
+
+  try {
+    let raw, obj;
+
+    if (isSingleWord) {
+      raw = await callClaude(
+        `You are a bilingual English-Uzbek dictionary. Detect language, check if real word, translate.
+If NOT real: {"found":false}.
+If real: return all fields below.
+Respond ONLY in JSON (no markdown):
+{"found":true/false,"lang":"en"/"uz","word":"...","translation":"...","partOfSpeech":"...","examples":[{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."}]}`,
+        text);
+      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      const dir = obj.lang === 'uz' ? '🇺🇿 → 🇬🇧' : '🇬🇧 → 🇺🇿';
+
+      resultDiv.innerHTML = !obj.found
+        ? `<div class="result-card"><div class="status-badge status-incorrect">❌ Not found</div><div class="result-text">"${text}" — word not found. Check the spelling.</div></div>`
+        : `<div class="result-card">
+            <div class="status-badge status-correct">${dir}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--accent);margin-top:8px;">${obj.word}</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">${obj.partOfSpeech}</div>
+            <div class="result-label">Translation</div>
+            <div style="font-size:1.1rem;font-weight:500;margin-bottom:12px;">${obj.translation}</div>
+            <div class="result-label">Examples</div>
+            ${obj.examples.map(e=>`<div class="example-item"><div class="example-en">${e.en}</div><div class="example-uz">${e.uz}</div></div>`).join('')}
+          </div>`;
+
+    } else {
+      raw = await callClaude(
+        `You are an expert English-Uzbek translator. Detect language, translate, add notes and 3 examples.
+Respond ONLY in JSON (no markdown):
+{"lang":"en"/"uz","translation":"...","notes":"notes or 'Straightforward translation.'","examples":[{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."}]}`,
+        text);
+      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      const dir = obj.lang === 'uz' ? '🇺🇿 → 🇬🇧' : '🇬🇧 → 🇺🇿';
+
+      resultDiv.innerHTML = `
+        <div class="result-card">
+          <div class="status-badge status-correct">${dir}</div>
+          <div class="result-label" style="margin-top:10px;">Translation</div>
+          <div class="uz-text">${obj.translation}</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">💡 Notes</div>
+          <div class="result-text">${obj.notes}</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">📝 Examples</div>
+          ${obj.examples.map(e=>`<div class="example-item"><div class="example-en">${e.en}</div><div class="example-uz">${e.uz}</div></div>`).join('')}
+        </div>`;
+    }
+
+    resultDiv.style.display = 'block';
+  } catch(e) {
+    document.getElementById('translate-error').textContent = 'Error: ' + e.message;
+  }
+  document.getElementById('translate-loading').style.display = 'none';
+}
+
+// Load vocab history on start
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('et_key');
+  if (saved) {
+    API_KEY = saved;
+    document.getElementById('api-key-input').value = saved;
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  }
+  renderVocabHistory();
+});
+
+// ── TRANSLATOR ──
+async function doTranslate() {
+  const text = document.getElementById('translate-input').value.trim();
+  if (!text) return;
+  const resultDiv = document.getElementById('translate-result');
+  resultDiv.style.display = 'none';
+  document.getElementById('translate-error').textContent = '';
+  document.getElementById('translate-loading').style.display = 'flex';
+
+  const isSingleWord = text.trim().split(/\s+/).length === 1;
+
+  try {
+    let raw, obj;
+
+    // Detect language
+    const langRaw = await callClaude(
+      `Detect if the input is English or Uzbek. Respond ONLY in JSON: {"lang": "en" or "uz"}`,
+      text, 50
+    );
+    const langObj = JSON.parse(langRaw.replace(/```json|```/g, '').trim());
+    const isUzbek = langObj.lang === 'uz';
+    const directionLabel = isUzbek ? '🇺🇿 → 🇬🇧 Uzbek → English' : '🇬🇧 → 🇺🇿 English → Uzbek';
+
+    if (isSingleWord) {
+      raw = await callClaude(
+        `You are a bilingual English-Uzbek dictionary.
+The user gives a single word in either English or Uzbek.
+Detect the language and translate it to the other language.
+Check if it is a real word first.
+If NOT real: return {"found": false}.
+If real: return translation, part of speech, and 4 example sentences with both English and Uzbek.
+Respond ONLY in JSON (no markdown):
+{
+  "found": true/false,
+  "inputLang": "en" or "uz",
+  "word": "...",
+  "translation": "...",
+  "partOfSpeech": "...",
+  "examples": [
+    {"en":"...","uz":"..."},
+    {"en":"...","uz":"..."},
+    {"en":"...","uz":"..."},
+    {"en":"...","uz":"..."}
+  ]
+}`,
+        text
+      );
+      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+
+      if (!obj.found) {
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge status-incorrect">❌ Not found</div>
+            <div class="result-text">"${text}" — word not found. Please check the spelling.</div>
+          </div>`;
+      } else {
+        resultDiv.innerHTML = `
+          <div class="result-card">
+            <div class="status-badge status-correct">${directionLabel}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--accent);margin-top:8px;">${obj.word}</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">${obj.partOfSpeech}</div>
+            <div class="result-label">Translation</div>
+            <div style="font-size:1.1rem;font-weight:500;margin-bottom:12px;">${obj.translation}</div>
+            <div class="result-label">Examples</div>
+            ${obj.examples.map(e => `
+              <div class="example-item">
+                <div class="example-en">${e.en}</div>
+                <div class="example-uz">${e.uz}</div>
+              </div>`).join('')}
+          </div>`;
+      }
+
+    } else {
+      raw = await callClaude(
+        `You are an expert English-Uzbek translator.
+The user gives text in either English or Uzbek. Detect the language and translate to the other.
+Also provide 3 example sentences related to the topic (with both English and Uzbek).
+Add brief notes about idioms or tricky phrases if any.
+Respond ONLY in JSON (no markdown):
+{
+  "inputLang": "en" or "uz",
+  "translation": "full translation into the other language",
+  "notes": "notes on idioms/tricky parts, or 'Straightforward translation.' if simple",
+  "examples": [
+    {"en":"...","uz":"..."},
+    {"en":"...","uz":"..."},
+    {"en":"...","uz":"..."}
+  ]
+}`,
+        text
+      );
+      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+
+      resultDiv.innerHTML = `
+        <div class="result-card">
+          <div class="status-badge status-correct">${directionLabel}</div>
+          <div class="result-label" style="margin-top:10px;">Translation</div>
+          <div class="uz-text">${obj.translation}</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">💡 Notes</div>
+          <div class="result-text">${obj.notes}</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">📝 Examples</div>
+          ${obj.examples.map(e => `
+            <div class="example-item">
+              <div class="example-en">${e.en}</div>
+              <div class="example-uz">${e.uz}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    resultDiv.style.display = 'block';
+  } catch(e) {
+    document.getElementById('translate-error').textContent = 'Error: ' + e.message;
+  }
+  document.getElementById('translate-loading').style.display = 'none';
+}
+</script>
+</body>
+</html>

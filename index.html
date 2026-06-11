@@ -80,8 +80,46 @@
   <script defer src="assets/auth.js"></script>
   <script defer src="assets/icons.js"></script>
   <script>
+    const TUTOR_ACCESS_HASH = 'ab493e2d49722089e5fffec94c24f1d00f4bfbc18aa6fe5d5e32fee18bcd5e58';
+    const TUTOR_SESSION_KEY = 'evolead_tutor_access';
+
+    function unlockTutor() {
+      const key = prompt('Access key');
+      if (!key) return;
+
+      if (sha256(key.trim()) === TUTOR_ACCESS_HASH) {
+        sessionStorage.setItem(TUTOR_SESSION_KEY, TUTOR_ACCESS_HASH);
+        location.href = 'english_tutor.html';
+        return;
+      }
+
+      alert('Access denied.');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('logoutBtn').addEventListener('click', logout);
+
+      if (location.hash === '#tutor') {
+        history.replaceState(null, '', location.pathname);
+        unlockTutor();
+      }
+
+      let typed = '';
+      document.addEventListener('keydown', (event) => {
+        const target = event.target;
+        const isTextInput =
+          target instanceof HTMLInputElement ||
+          target instanceof HTMLTextAreaElement ||
+          target?.isContentEditable;
+
+        if (isTextInput || event.ctrlKey || event.metaKey || event.altKey) return;
+
+        typed = `${typed}${event.key.toLowerCase()}`.slice(-5);
+        if (typed === 'tutor') {
+          typed = '';
+          unlockTutor();
+        }
+      });
     });
   </script>
 </body>
