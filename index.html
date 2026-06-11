@@ -27,11 +27,7 @@
   <link rel="stylesheet" href="assets/index.css" />
   <script>
     if (sessionStorage.getItem('evolead_auth') !== '40d1da3cb9e16e214ac32bbed3acb7a40502ccd275cadbaaab24e45f0152884d') {
-      const opensTutor =
-        location.hash === '#tutor' ||
-        new URLSearchParams(location.search).get('open') === 'tutor';
-      const next = opensTutor ? 'index.html%3Fopen%3Dtutor' : 'index.html';
-      location.replace(`login.html?next=${next}`);
+      location.replace('login.html');
     }
   </script>
 </head>
@@ -80,6 +76,15 @@
             <strong>Explore</strong>
           </div>
         </a>
+
+        <a class="nav-card" href="english_tutor.html">
+          <div class="nav-card-icon" aria-hidden="true">
+            <i data-lucide="messages-square"></i>
+          </div>
+          <div class="nav-card-body">
+            <strong>English Tutor</strong>
+          </div>
+        </a>
       </nav>
     </header>
   </main>
@@ -88,52 +93,8 @@
   <script defer src="assets/auth.js"></script>
   <script defer src="assets/icons.js"></script>
   <script>
-    const TUTOR_ACCESS_HASH = 'ab493e2d49722089e5fffec94c24f1d00f4bfbc18aa6fe5d5e32fee18bcd5e58';
-    const TUTOR_SESSION_KEY = 'evolead_tutor_access';
-
-    function unlockTutor() {
-      if (localStorage.getItem(TUTOR_SESSION_KEY) === TUTOR_ACCESS_HASH) {
-        location.href = 'english_tutor.html';
-        return;
-      }
-
-      const key = prompt('Access key');
-      if (!key) return;
-
-      if (sha256(key.trim()) === TUTOR_ACCESS_HASH) {
-        localStorage.setItem(TUTOR_SESSION_KEY, TUTOR_ACCESS_HASH);
-        location.href = 'english_tutor.html';
-        return;
-      }
-
-      alert('Access denied.');
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('logoutBtn').addEventListener('click', logout);
-
-      const params = new URLSearchParams(location.search);
-      if (location.hash === '#tutor' || params.get('open') === 'tutor') {
-        history.replaceState(null, '', location.pathname);
-        unlockTutor();
-      }
-
-      let typed = '';
-      document.addEventListener('keydown', (event) => {
-        const target = event.target;
-        const isTextInput =
-          target instanceof HTMLInputElement ||
-          target instanceof HTMLTextAreaElement ||
-          target?.isContentEditable;
-
-        if (isTextInput || event.ctrlKey || event.metaKey || event.altKey) return;
-
-        typed = `${typed}${event.key.toLowerCase()}`.slice(-5);
-        if (typed === 'tutor') {
-          typed = '';
-          unlockTutor();
-        }
-      });
     });
   </script>
 </body>

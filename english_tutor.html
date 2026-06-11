@@ -7,25 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 <script src="assets/auth.js?v=3"></script>
 <script>
-  const TUTOR_ACCESS_HASH = 'ab493e2d49722089e5fffec94c24f1d00f4bfbc18aa6fe5d5e32fee18bcd5e58';
-  const TUTOR_SESSION_KEY = 'evolead_tutor_access';
-  const tutorParams = new URLSearchParams(location.search);
-  const accessCode = tutorParams.get('access');
-
-  if (accessCode && sha256(accessCode.trim()) === TUTOR_ACCESS_HASH) {
-    localStorage.setItem(TUTOR_SESSION_KEY, TUTOR_ACCESS_HASH);
-    history.replaceState(null, '', location.pathname);
-  }
-
-  if (
-    sessionStorage.getItem(SESSION_KEY) !== AUTH_HASH ||
-    localStorage.getItem(TUTOR_SESSION_KEY) !== TUTOR_ACCESS_HASH
-  ) {
-    location.replace(
-      sessionStorage.getItem(SESSION_KEY) === AUTH_HASH
-        ? 'index.html'
-        : `login.html?next=${encodeURIComponent(`english_tutor.html${location.search}`)}`
-    );
+  if (sessionStorage.getItem(SESSION_KEY) !== AUTH_HASH) {
+    location.replace('login.html?next=english_tutor.html');
   }
 </script>
 <style>
@@ -149,6 +132,13 @@
     background: #111827;
     border-color: #111827;
     color: #ffffff;
+  }
+
+  button:disabled,
+  textarea:disabled,
+  select:disabled {
+    cursor: wait;
+    opacity: 0.72;
   }
 
   .setup-note {
@@ -584,34 +574,54 @@
 
 <script>
 let API_KEY = '';
+const CLAUDE_MODEL = 'claude-3-5-haiku-latest';
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+function parseClaudeJson(raw) {
+  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+}
+
+function setBusy(section, busy) {
+  $(`${section}-loading`).style.display = busy ? 'flex' : 'none';
+  document
+    .querySelectorAll(`#panel-${section} button, #panel-${section} textarea, #panel-${section} select`)
+    .forEach((el) => {
+      el.disabled = busy;
+    });
+}
+
+function setError(section, error) {
+  $(`${section}-error`).textContent = error ? `Error: ${error.message}` : '';
+}
 
 function startApp() {
-  const key = document.getElementById('api-key-input').value.trim();
+  const key = $('api-key-input').value.trim();
   if (!key.startsWith('sk-ant')) { alert('Iltimos, to\'g\'ri API kalit kiriting (sk-ant- bilan boshlanadi)'); return; }
   API_KEY = key;
   localStorage.setItem('et_key', key);
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  $('setup-screen').style.display = 'none';
+  $('app').style.display = 'block';
 }
 
 function logout() {
   API_KEY = '';
   localStorage.removeItem('et_key');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('setup-screen').style.display = 'flex';
-  document.getElementById('api-key-input').value = '';
+  $('app').style.display = 'none';
+  $('setup-screen').style.display = 'flex';
+  $('api-key-input').value = '';
 }
-
-
 
 function switchTab(tab, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
+  $(`panel-${tab}`).classList.add('active');
   el.classList.add('active');
 }
 
-async function callClaude(system, user, maxTokens = 1500) {
+async function callClaude(system, user, maxTokens = 1000) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -621,7 +631,7 @@ async function callClaude(system, user, maxTokens = 1500) {
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      model: CLAUDE_MODEL,
       max_tokens: maxTokens,
       system,
       messages: [{ role: 'user', content: user }]
@@ -634,12 +644,12 @@ async function callClaude(system, user, maxTokens = 1500) {
 
 // ── GRAMMAR ──
 async function checkGrammar() {
-  const text = document.getElementById('grammar-input').value.trim();
+  const text = $('grammar-input').value.trim();
   if (!text) return;
-  const resultDiv = document.getElementById('grammar-result');
+  const resultDiv = $('grammar-result');
   resultDiv.style.display = 'none';
-  document.getElementById('grammar-error').textContent = '';
-  document.getElementById('grammar-loading').style.display = 'flex';
+  setError('grammar');
+  setBusy('grammar', true);
 
   const isSingleWord = text.trim().split(/\s+/).length === 1;
 
@@ -662,7 +672,7 @@ Respond ONLY in JSON (no markdown):
   "englishTranslation": "...(if Uzbek input)",
   "examples": [{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."}]
 }`, text);
-      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      obj = parseClaudeJson(raw);
 
       if (obj.lang === 'uz') {
         resultDiv.innerHTML = `
@@ -708,7 +718,7 @@ Respond ONLY in JSON (no markdown):
   "explanationEN": "...(if incorrect, else empty)",
   "explanationUZ": "...(if incorrect, else empty)"
 }`, text);
-      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      obj = parseClaudeJson(raw);
 
       if (obj.lang === 'uz') {
         resultDiv.innerHTML = `
@@ -742,9 +752,10 @@ Respond ONLY in JSON (no markdown):
 
     resultDiv.style.display = 'block';
   } catch(e) {
-    document.getElementById('grammar-error').textContent = 'Error: ' + e.message;
+    setError('grammar', e);
+  } finally {
+    setBusy('grammar', false);
   }
-  document.getElementById('grammar-loading').style.display = 'none';
 }
 
 // ── VOCABULARY ──
@@ -777,9 +788,9 @@ function renderVocabHistory() {
 }
 
 async function getVocab() {
-  const level = document.getElementById('vocab-level').value;
-  document.getElementById('vocab-error').textContent = '';
-  document.getElementById('vocab-loading').style.display = 'flex';
+  const level = $('vocab-level').value;
+  setError('vocab');
+  setBusy('vocab', true);
   try {
     const raw = await callClaude(
       `You are an English vocabulary teacher for Uzbek learners.
@@ -788,28 +799,29 @@ For each word provide: word, pronunciation, part of speech, simple English defin
 Respond ONLY in JSON array (no markdown, no preamble):
 [{"word":"...","pronunciation":"...","partOfSpeech":"...","definition":"...","uzbekMeaning":"...","example1":"...","example2":"..."}]`,
       `Give me 10 ${level}-level English vocabulary words.`,
-      2500
+      1800
     );
-    const words = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    const words = parseClaudeJson(raw);
     const dateStr = new Date().toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
     vocabHistory.push({ date: dateStr, level, words });
     if (vocabHistory.length > 10) vocabHistory = vocabHistory.slice(-10);
     localStorage.setItem('vocab_history', JSON.stringify(vocabHistory));
     renderVocabHistory();
   } catch(e) {
-    document.getElementById('vocab-error').textContent = 'Error: ' + e.message;
+    setError('vocab', e);
+  } finally {
+    setBusy('vocab', false);
   }
-  document.getElementById('vocab-loading').style.display = 'none';
 }
 
 // ── TRANSLATOR ──
 async function doTranslate() {
-  const text = document.getElementById('translate-input').value.trim();
+  const text = $('translate-input').value.trim();
   if (!text) return;
-  const resultDiv = document.getElementById('translate-result');
+  const resultDiv = $('translate-result');
   resultDiv.style.display = 'none';
-  document.getElementById('translate-error').textContent = '';
-  document.getElementById('translate-loading').style.display = 'flex';
+  setError('translate');
+  setBusy('translate', true);
 
   const isSingleWord = text.trim().split(/\s+/).length === 1;
 
@@ -824,7 +836,7 @@ If real: return all fields below.
 Respond ONLY in JSON (no markdown):
 {"found":true/false,"lang":"en"/"uz","word":"...","translation":"...","partOfSpeech":"...","examples":[{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."}]}`,
         text);
-      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      obj = parseClaudeJson(raw);
       const dir = obj.lang === 'uz' ? '🇺🇿 → 🇬🇧' : '🇬🇧 → 🇺🇿';
 
       resultDiv.innerHTML = !obj.found
@@ -845,7 +857,7 @@ Respond ONLY in JSON (no markdown):
 Respond ONLY in JSON (no markdown):
 {"lang":"en"/"uz","translation":"...","notes":"notes or 'Straightforward translation.'","examples":[{"en":"...","uz":"..."},{"en":"...","uz":"..."},{"en":"...","uz":"..."}]}`,
         text);
-      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      obj = parseClaudeJson(raw);
       const dir = obj.lang === 'uz' ? '🇺🇿 → 🇬🇧' : '🇬🇧 → 🇺🇿';
 
       resultDiv.innerHTML = `
@@ -866,9 +878,10 @@ Respond ONLY in JSON (no markdown):
 
     resultDiv.style.display = 'block';
   } catch(e) {
-    document.getElementById('translate-error').textContent = 'Error: ' + e.message;
+    setError('translate', e);
+  } finally {
+    setBusy('translate', false);
   }
-  document.getElementById('translate-loading').style.display = 'none';
 }
 
 // Load vocab history on start
@@ -876,132 +889,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('et_key');
   if (saved) {
     API_KEY = saved;
-    document.getElementById('api-key-input').value = saved;
-    document.getElementById('setup-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
+    $('api-key-input').value = saved;
+    $('setup-screen').style.display = 'none';
+    $('app').style.display = 'block';
   }
   renderVocabHistory();
 });
-
-// ── TRANSLATOR ──
-async function doTranslate() {
-  const text = document.getElementById('translate-input').value.trim();
-  if (!text) return;
-  const resultDiv = document.getElementById('translate-result');
-  resultDiv.style.display = 'none';
-  document.getElementById('translate-error').textContent = '';
-  document.getElementById('translate-loading').style.display = 'flex';
-
-  const isSingleWord = text.trim().split(/\s+/).length === 1;
-
-  try {
-    let raw, obj;
-
-    // Detect language
-    const langRaw = await callClaude(
-      `Detect if the input is English or Uzbek. Respond ONLY in JSON: {"lang": "en" or "uz"}`,
-      text, 50
-    );
-    const langObj = JSON.parse(langRaw.replace(/```json|```/g, '').trim());
-    const isUzbek = langObj.lang === 'uz';
-    const directionLabel = isUzbek ? '🇺🇿 → 🇬🇧 Uzbek → English' : '🇬🇧 → 🇺🇿 English → Uzbek';
-
-    if (isSingleWord) {
-      raw = await callClaude(
-        `You are a bilingual English-Uzbek dictionary.
-The user gives a single word in either English or Uzbek.
-Detect the language and translate it to the other language.
-Check if it is a real word first.
-If NOT real: return {"found": false}.
-If real: return translation, part of speech, and 4 example sentences with both English and Uzbek.
-Respond ONLY in JSON (no markdown):
-{
-  "found": true/false,
-  "inputLang": "en" or "uz",
-  "word": "...",
-  "translation": "...",
-  "partOfSpeech": "...",
-  "examples": [
-    {"en":"...","uz":"..."},
-    {"en":"...","uz":"..."},
-    {"en":"...","uz":"..."},
-    {"en":"...","uz":"..."}
-  ]
-}`,
-        text
-      );
-      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
-
-      if (!obj.found) {
-        resultDiv.innerHTML = `
-          <div class="result-card">
-            <div class="status-badge status-incorrect">❌ Not found</div>
-            <div class="result-text">"${text}" — word not found. Please check the spelling.</div>
-          </div>`;
-      } else {
-        resultDiv.innerHTML = `
-          <div class="result-card">
-            <div class="status-badge status-correct">${directionLabel}</div>
-            <div style="font-size:1.6rem;color:var(--accent);margin-top:8px;">${obj.word}</div>
-            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">${obj.partOfSpeech}</div>
-            <div class="result-label">Translation</div>
-            <div style="font-size:1.1rem;font-weight:500;margin-bottom:12px;">${obj.translation}</div>
-            <div class="result-label">Examples</div>
-            ${obj.examples.map(e => `
-              <div class="example-item">
-                <div class="example-en">${e.en}</div>
-                <div class="example-uz">${e.uz}</div>
-              </div>`).join('')}
-          </div>`;
-      }
-
-    } else {
-      raw = await callClaude(
-        `You are an expert English-Uzbek translator.
-The user gives text in either English or Uzbek. Detect the language and translate to the other.
-Also provide 3 example sentences related to the topic (with both English and Uzbek).
-Add brief notes about idioms or tricky phrases if any.
-Respond ONLY in JSON (no markdown):
-{
-  "inputLang": "en" or "uz",
-  "translation": "full translation into the other language",
-  "notes": "notes on idioms/tricky parts, or 'Straightforward translation.' if simple",
-  "examples": [
-    {"en":"...","uz":"..."},
-    {"en":"...","uz":"..."},
-    {"en":"...","uz":"..."}
-  ]
-}`,
-        text
-      );
-      obj = JSON.parse(raw.replace(/```json|```/g, '').trim());
-
-      resultDiv.innerHTML = `
-        <div class="result-card">
-          <div class="status-badge status-correct">${directionLabel}</div>
-          <div class="result-label" style="margin-top:10px;">Translation</div>
-          <div class="uz-text">${obj.translation}</div>
-        </div>
-        <div class="result-card">
-          <div class="result-label">💡 Notes</div>
-          <div class="result-text">${obj.notes}</div>
-        </div>
-        <div class="result-card">
-          <div class="result-label">📝 Examples</div>
-          ${obj.examples.map(e => `
-            <div class="example-item">
-              <div class="example-en">${e.en}</div>
-              <div class="example-uz">${e.uz}</div>
-            </div>`).join('')}
-        </div>`;
-    }
-
-    resultDiv.style.display = 'block';
-  } catch(e) {
-    document.getElementById('translate-error').textContent = 'Error: ' + e.message;
-  }
-  document.getElementById('translate-loading').style.display = 'none';
-}
 </script>
 </body>
 </html>
