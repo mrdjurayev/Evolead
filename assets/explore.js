@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'explore_videos';
+const CATALOG_HASH_KEY = 'explore_catalog_hash';
 const CATALOG_URL = 'assets/explore-videos.json';
 
 const GITHUB_SYNC = {
@@ -26,6 +27,14 @@ function normalizeIds(value) {
   if (!Array.isArray(value)) return null;
   const ids = value.filter((id) => typeof id === 'string' && /^[A-Za-z0-9_-]{11}$/.test(id));
   return ids.length ? ids : null;
+}
+
+function mergeIds(primary, secondary) {
+  return [...new Set([...(primary || []), ...(secondary || [])])];
+}
+
+function catalogHash(ids) {
+  return ids.join('|');
 }
 
 function idsFromUrl() {
@@ -65,6 +74,19 @@ function saveLocalIds(ids) {
     return true;
   } catch {}
   return false;
+}
+
+function readCatalogHash() {
+  try {
+    return localStorage.getItem(CATALOG_HASH_KEY);
+  } catch {}
+  return null;
+}
+
+function saveCatalogHash(ids) {
+  try {
+    localStorage.setItem(CATALOG_HASH_KEY, catalogHash(ids));
+  } catch {}
 }
 
 function updateSyncUrl(ids) {
@@ -165,8 +187,13 @@ async function loadIds() {
 
   if (GITHUB_SYNC.token.trim()) return remote;
 
-  if (local) return local;
-  return remote;
+  const remoteHash = catalogHash(remote);
+  if (local && readCatalogHash() === remoteHash) return local;
+
+  const merged = mergeIds(remote, local);
+  saveLocalIds(merged);
+  saveCatalogHash(remote);
+  return merged;
 }
 
 async function persistIds(ids, { copiedLink = false } = {}) {
