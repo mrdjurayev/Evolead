@@ -155,7 +155,10 @@ async function saveToGithub(ids) {
 
 async function loadIds() {
   const fromUrl = idsFromUrl();
-  if (fromUrl) return fromUrl;
+  if (fromUrl) {
+    saveLocalIds(fromUrl);
+    return fromUrl;
+  }
 
   const remote = await fetchCanonicalIds();
   const local = readLocalIds();
@@ -184,8 +187,8 @@ async function persistIds(ids, { copiedLink = false } = {}) {
     const copied = await copyText(syncUrl);
     setStatus(
       copied
-        ? 'Link copied. Open the same page on your phone to see these videos.'
-        : 'Open this same page URL on your phone to see these videos.'
+        ? 'Temporary browser save. Recovery link copied; keep it to restore these videos.'
+        : 'Temporary browser save. Keep this page URL to restore these videos.'
     );
   }
 }
